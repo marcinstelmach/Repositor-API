@@ -13,4 +13,8 @@
     <DotNetCliToolReference Include="Microsoft.Extensions.SecretManager.Tools" Version="2.0.0" />
     <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="2.0.0" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\RepositoryApp.Data\RepositoryApp.Data.csproj" />
+    <ProjectReference Include="..\RepositoryApp.Service\RepositoryApp.Service.csproj" />
+  </ItemGroup>
 </Project>
