@@ -7,9 +7,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace RepositoryApp.API.Data
 {
-    public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
+    public class ApplicationDbContext_org : IdentityDbContext<ApplicationUser>
     {
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+        public ApplicationDbContext_org(DbContextOptions<ApplicationDbContext_org> options)
             : base(options)
         {
         }
