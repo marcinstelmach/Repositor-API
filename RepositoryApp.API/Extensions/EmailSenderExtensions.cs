@@ -1,9 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
-using RepositoryApp.API.Services;
+using RepositoryApp.Service.Services.Interfaces;
 
 namespace RepositoryApp.API.Services
 {

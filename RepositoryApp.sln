@@ -5,11 +5,9 @@ VisualStudioVersion = 15.0.27004.2002
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepositoryApp.API", "RepositoryApp.API\RepositoryApp.API.csproj", "{CBF4453D-C2BF-4E89-9658-3D970D6168D7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepositoryApp.Data", "RepositoryApp.Data\RepositoryApp.Data.csproj", "{CAED2D45-6158-4E34-B9EE-6B8F80F925CF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepositoryApp.Data", "RepositoryApp.Data\RepositoryApp.Data.csproj", "{CAED2D45-6158-4E34-B9EE-6B8F80F925CF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepositoryApp.Service", "RepositoryApp.Service\RepositoryApp.Service.csproj", "{4ADF80AD-423D-4095-9F22-A9B20EB0A9C4}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepositoryApp.Test", "RepositoryApp.Test\RepositoryApp.Test.csproj", "{D790D56B-B416-4259-A49F-5FE0551C055B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepositoryApp.Service", "RepositoryApp.Service\RepositoryApp.Service.csproj", "{4ADF80AD-423D-4095-9F22-A9B20EB0A9C4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,10 +27,6 @@ Global
 		{4ADF80AD-423D-4095-9F22-A9B20EB0A9C4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4ADF80AD-423D-4095-9F22-A9B20EB0A9C4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4ADF80AD-423D-4095-9F22-A9B20EB0A9C4}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D790D56B-B416-4259-A49F-5FE0551C055B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D790D56B-B416-4259-A49F-5FE0551C055B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D790D56B-B416-4259-A49F-5FE0551C055B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D790D56B-B416-4259-A49F-5FE0551C055B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

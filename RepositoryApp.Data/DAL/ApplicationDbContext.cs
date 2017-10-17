@@ -1,24 +1,22 @@
 ﻿using System;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Text;
 using Microsoft.AspNetCore.Identity;
-using RepositoryApp.Data.Model;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using RepositoryApp.Data.Model;
+using Version = RepositoryApp.Data.Model.Version;
 
 namespace RepositoryApp.Data.DAL
 {
     public class ApplicationDbContext : IdentityDbContext<User, ApplicationRole, Guid>
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
-            :base(options)
+            : base(options)
         {
-            
         }
 
-        public DbSet<User> Users { get; set; }
+        public new DbSet<User> Users { get; set; }
         public DbSet<Repository> Repositories { get; set; }
-        public DbSet<Model.Version> Versions { get; set; }
+        public DbSet<Version> Versions { get; set; }
         public DbSet<File> Files { get; set; }
 
 
@@ -26,7 +24,7 @@ namespace RepositoryApp.Data.DAL
         {
             builder.Entity<User>().ToTable("User").Property(p => p.Id).ValueGeneratedOnAdd();
             builder.Entity<Repository>().ToTable("Repository");
-            builder.Entity<Model.Version>().ToTable("Version");
+            builder.Entity<Version>().ToTable("Version");
             builder.Entity<File>().ToTable("File");
 
             builder.Ignore<IdentityUserLogin<Guid>>();
