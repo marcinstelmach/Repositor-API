@@ -1,3 +1,4 @@
+using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -5,6 +6,7 @@ using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Serialization;
 using RepositoryApp.Data.DAL;
 using RepositoryApp.Data.Model;
@@ -45,11 +47,15 @@ namespace RepositoryApp.API
 
             // Register no-op EmailSender used by account confirmation and password reset during development
             // For more information on how to enable account confirmation and password reset please visit https://go.microsoft.com/fwlink/?LinkID=532713
+            services.AddAutoMapper();
             services.AddSingleton<IEmailSender, EmailSender>();
+            services.AddSingleton(Configuration);
+            services.AddTransient<IRepositoryService, RepositoryService>();
+            services.AddTransient<IDirectoryRepositoryService, DirectoryRepositoryService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ApplicationDbContext dbContext)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             if (env.IsDevelopment())
                 app.UseDeveloperExceptionPage();
@@ -58,7 +64,7 @@ namespace RepositoryApp.API
             app.UseCors(builder => builder.AllowAnyOrigin());
             app.UseMvc();
 
-            DbInitializeProvider.InitializeWithDefaults(dbContext);
+            //DbInitializeProvider.InitializeWithDefaults(dbContext);
         }
     }
 }

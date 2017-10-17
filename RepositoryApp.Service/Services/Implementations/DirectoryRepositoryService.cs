@@ -1,0 +1,36 @@
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Text;
+using System.Threading.Tasks;
+using RepositoryApp.Service.Services.Interfaces;
+
+namespace RepositoryApp.Service.Services.Implementations
+{
+    public class DirectoryRepositoryService : IDirectoryRepositoryService
+    {
+        public async Task CreateDirectoryRepository(string path)
+        {
+            Directory.CreateDirectory(path);
+            await Task.CompletedTask;
+        }
+
+        public bool DirectoryRepositoryExist(string path)
+        {
+            return Directory.Exists(path);
+        }
+
+        public async Task RemoveDirectoryRepository(string path)
+        {
+            Directory.Delete(path, true);
+            await Task.CompletedTask;
+        }
+
+        public async Task RenameDirectoryRepository(string path, string newName)
+        {
+            var newPath = path.Substring(0, path.LastIndexOf('\\')) + path.Substring(path.LastIndexOf('\\')) + newName;
+            Directory.Move(path, newPath);
+            await Task.CompletedTask;
+        }
+    }
+}

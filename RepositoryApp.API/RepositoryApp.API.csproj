@@ -5,6 +5,8 @@
     <StartupObject>RepositoryApp.API.Program</StartupObject>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="6.1.1" />
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="3.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.0.0" PrivateAssets="All" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.0.0" PrivateAssets="All" />
@@ -18,5 +20,9 @@
   <ItemGroup>
     <ProjectReference Include="..\RepositoryApp.Data\RepositoryApp.Data.csproj" />
     <ProjectReference Include="..\RepositoryApp.Service\RepositoryApp.Service.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="local\" />
+    <Folder Include="wwwroot\" />
   </ItemGroup>
 </Project>
