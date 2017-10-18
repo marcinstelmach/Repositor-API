@@ -8,12 +8,10 @@ using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json.Serialization;
 using RepositoryApp.Data.DAL;
 using RepositoryApp.Data.Model;
-using RepositoryApp.Service.Providers;
 using RepositoryApp.Service.Services.Implementations;
 using RepositoryApp.Service.Services.Interfaces;
 
@@ -44,7 +42,6 @@ namespace RepositoryApp.API
                 })
                 .AddJwtBearer(o =>
                 {
-
                     o.RequireHttpsMetadata = false;
                     o.SaveToken = true;
                     o.TokenValidationParameters = new TokenValidationParameters
@@ -73,12 +70,11 @@ namespace RepositoryApp.API
             services.AddSingleton(Configuration);
             services.AddTransient<IRepositoryService, RepositoryService>();
             services.AddTransient<IUserService, UserService>();
-            services.AddTransient<IDirectoryRepositoryService, DirectoryRepositoryService>();
-            services.AddTransient<IDirectoryUserService, DirectoryUserService>();
+            services.AddTransient<IDirectoryService, DirectoryService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ApplicationDbContext dbContext)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             if (env.IsDevelopment())
                 app.UseDeveloperExceptionPage();
@@ -87,7 +83,7 @@ namespace RepositoryApp.API
             app.UseCors(builder => builder.AllowAnyOrigin());
             app.UseMvc();
 
-            DbInitializeProvider.InitializeWithDefaults(dbContext);
+            //DbInitializeProvider.InitializeWithDefaults(dbContext);
         }
     }
 }

@@ -25,10 +25,10 @@ namespace RepositoryApp.API.Controllers
         private readonly IUserService _userService;
         private readonly IHttpContextAccessor _accessor;
         private readonly IConfiguration _configuration;
-        private readonly IDirectoryUserService _directoryUserService;
+        private readonly IDirectoryService _directoryService;
 
         public UserController(IMapper mapper, SignInManager<User> signInManager, UserManager<User> userManager, IUserService userService, IHttpContextAccessor accessor, IConfiguration configuration,
-            IDirectoryUserService directoryUserService)
+            IDirectoryService directoryService)
         {
             _mapper = mapper;
             _signInManager = signInManager;
@@ -36,7 +36,7 @@ namespace RepositoryApp.API.Controllers
             _userService = userService;
             _accessor = accessor;
             _configuration = configuration;
-            _directoryUserService = directoryUserService;
+            _directoryService = directoryService;
         }
 
         [HttpPost]
@@ -58,13 +58,13 @@ namespace RepositoryApp.API.Controllers
             }
 
             var path = $"{_configuration["Paths:Defaultpath"]}{user.UniqueName}";
-            if (_directoryUserService.DirectoryForUserExist(path))
+            if (_directoryService.DirectoryExist(path))
             {
                 return StatusCode(500, "Something goes wrong...");
             }
             try
             {
-                await _directoryUserService.CreateDirectoryForUser(path);
+                await _directoryService.CreateDirectory(path);
             }
             catch (Exception e)
             {
