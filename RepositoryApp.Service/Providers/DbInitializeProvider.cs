@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using RepositoryApp.Data.DAL;
 using RepositoryApp.Data.Model;
+using RepositoryApp.Service.Helpers;
 using Version = RepositoryApp.Data.Model.Version;
 
 namespace RepositoryApp.Service.Providers
@@ -16,7 +17,7 @@ namespace RepositoryApp.Service.Providers
 
             if (dbContext.Users.Any())
                 return;
-
+            var random = string.Empty;
             var users = new List<User>
             {
                 new User
@@ -29,6 +30,7 @@ namespace RepositoryApp.Service.Providers
                         "AQAAAAEAACcQAAAAEMtt9h4GOrsKAmzphBrm+Uk4ZJpwlwouaMW8dQD2oHet7f5BIRZPYfgu3ZoR2m1Wdg==",
                     NormalizedEmail = "TEST@GMAIL.COM",
                     NormalizedUserName = "TEST@GMAIL.COM",
+                    UniqueName = $"tescik{random.RandomString(10)}",
                     LockoutEnabled = true,
                     FirstName = "Jan",
                     LastName = "Kowalski",
@@ -39,7 +41,7 @@ namespace RepositoryApp.Service.Providers
                         {
                             Id = Guid.NewGuid(),
                             Name = "MyRepository1",
-                            UniqueName = $"MyRepository1_{Guid.NewGuid().ToString()}",
+                            UniqueName = $"MyRepository1_{random.RandomString(10)}",
                             CreationDateTime = DateTime.Now,
                             ModifyDateTime = DateTime.Now,
                             Versions = new List<Version>
@@ -48,7 +50,7 @@ namespace RepositoryApp.Service.Providers
                                 {
                                     Id = Guid.NewGuid(),
                                     Name = "1",
-                                    UniqueName = $"1_{Guid.NewGuid().ToString()}",
+                                    UniqueName = $"1_{random.RandomString(10)}",
                                     Description = "For Test",
                                     CreationDateTime = DateTime.Now,
                                     ModifDateTime = DateTime.Now,
@@ -59,14 +61,14 @@ namespace RepositoryApp.Service.Providers
                                         {
                                             Id = Guid.NewGuid(),
                                             Name = "FileOne",
-                                            UniqueName = $"FileOne_{Guid.NewGuid().ToString()}",
+                                            UniqueName = $"FileOne_{random.RandomString(10)}",
                                             CreationDateTime = DateTime.Now
                                         },
                                         new File
                                         {
                                             Id = Guid.NewGuid(),
                                             Name = "FileTwo",
-                                            UniqueName = $"FileTwo_{Guid.NewGuid().ToString()}",
+                                            UniqueName = $"FileTwo_{random.RandomString(10)}",
                                             CreationDateTime = DateTime.Now
                                         }
                                     }
@@ -75,7 +77,7 @@ namespace RepositoryApp.Service.Providers
                                 {
                                     Id = Guid.NewGuid(),
                                     Name = "2",
-                                    UniqueName = $"2_{Guid.NewGuid().ToString()}",
+                                    UniqueName = $"2_{random.RandomString(10)}",
                                     Description = "For Test",
                                     CreationDateTime = DateTime.Now,
                                     ModifDateTime = DateTime.Now,
@@ -86,21 +88,21 @@ namespace RepositoryApp.Service.Providers
                                         {
                                             Id = Guid.NewGuid(),
                                             Name = "FileOne",
-                                            UniqueName = $"FileOne_{Guid.NewGuid().ToString()}",
+                                            UniqueName = $"FileOne_{random.RandomString(10)}",
                                             CreationDateTime = DateTime.Now
                                         },
                                         new File
                                         {
                                             Id = Guid.NewGuid(),
                                             Name = "FileTwo",
-                                            UniqueName = $"FileTwo_{Guid.NewGuid().ToString()}",
+                                            UniqueName = $"FileTwo_{random.RandomString(10)}",
                                             CreationDateTime = DateTime.Now
                                         },
                                         new File
                                         {
                                             Id = Guid.NewGuid(),
                                             Name = "FileThree",
-                                            UniqueName = $"FileThree_{Guid.NewGuid().ToString()}",
+                                            UniqueName = $"FileThree_{random.RandomString(10)}",
                                             CreationDateTime = DateTime.Now
                                         }
                                     }
@@ -111,7 +113,7 @@ namespace RepositoryApp.Service.Providers
                         {
                             Id = Guid.NewGuid(),
                             Name = "MyRepository2",
-                            UniqueName = $"MyRepository2_{Guid.NewGuid().ToString()}",
+                            UniqueName = $"MyRepository2_{random.RandomString(10)}",
                             CreationDateTime = DateTime.Now,
                             ModifyDateTime = DateTime.Now,
                             Versions = new List<Version>
@@ -120,7 +122,7 @@ namespace RepositoryApp.Service.Providers
                                 {
                                     Id = Guid.NewGuid(),
                                     Name = "1",
-                                    UniqueName = $"1_{Guid.NewGuid().ToString()}",
+                                    UniqueName = $"1_{random.RandomString(10)}",
                                     Description = "For Test",
                                     CreationDateTime = DateTime.Now,
                                     ModifDateTime = DateTime.Now,
@@ -131,14 +133,14 @@ namespace RepositoryApp.Service.Providers
                                         {
                                             Id = Guid.NewGuid(),
                                             Name = "FileOne",
-                                            UniqueName = $"FileOne_{Guid.NewGuid().ToString()}",
+                                            UniqueName = $"FileOne_{random.RandomString(10)}",
                                             CreationDateTime = DateTime.Now
                                         },
                                         new File
                                         {
                                             Id = Guid.NewGuid(),
                                             Name = "FileTwo",
-                                            UniqueName = $"FileTwo_{Guid.NewGuid().ToString()}",
+                                            UniqueName = $"FileTwo_{random.RandomString(10)}",
                                             CreationDateTime = DateTime.Now
                                         }
                                     }
@@ -147,7 +149,7 @@ namespace RepositoryApp.Service.Providers
                                 {
                                     Id = Guid.NewGuid(),
                                     Name = "2",
-                                    UniqueName = $"2_{Guid.NewGuid().ToString()}",
+                                    UniqueName = $"2_{random.RandomString(10)}",
                                     Description = "For Test",
                                     CreationDateTime = DateTime.Now,
                                     ModifDateTime = DateTime.Now,
@@ -158,21 +160,21 @@ namespace RepositoryApp.Service.Providers
                                         {
                                             Id = Guid.NewGuid(),
                                             Name = "FileOne",
-                                            UniqueName = $"FileOne_{Guid.NewGuid().ToString()}",
+                                            UniqueName = $"FileOne_{random.RandomString(10)}",
                                             CreationDateTime = DateTime.Now
                                         },
                                         new File
                                         {
                                             Id = Guid.NewGuid(),
                                             Name = "FileTwo",
-                                            UniqueName = $"FileTwo_{Guid.NewGuid().ToString()}",
+                                            UniqueName = $"FileTwo_{random.RandomString(10)}",
                                             CreationDateTime = DateTime.Now
                                         },
                                         new File
                                         {
                                             Id = Guid.NewGuid(),
                                             Name = "FileThree",
-                                            UniqueName = $"FileThree_{Guid.NewGuid().ToString()}",
+                                            UniqueName = $"FileThree_{random.RandomString(10)}",
                                             CreationDateTime = DateTime.Now
                                         }
                                     }

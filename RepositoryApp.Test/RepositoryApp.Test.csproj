@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Moq" Version="4.7.142" />
+    <PackageReference Include="xunit" Version="2.3.0" />
+    <PackageReference Include="xunit.runner.console" Version="2.3.0" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.3.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\RepositoryApp.API\RepositoryApp.API.csproj" />
+    <ProjectReference Include="..\RepositoryApp.Data\RepositoryApp.Data.csproj" />
+    <ProjectReference Include="..\RepositoryApp.Service\RepositoryApp.Service.csproj" />
+  </ItemGroup>
+
+</Project>

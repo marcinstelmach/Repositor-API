@@ -1,4 +1,6 @@
+using System.Text;
 using AutoMapper;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -7,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json.Serialization;
 using RepositoryApp.Data.DAL;
 using RepositoryApp.Data.Model;
@@ -34,6 +37,24 @@ namespace RepositoryApp.API
             services.AddIdentity<User, ApplicationRole>(options => { options.User.RequireUniqueEmail = true; })
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
+            services.AddAuthentication(cfg =>
+                {
+                    cfg.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                    cfg.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+                })
+                .AddJwtBearer(o =>
+                {
+
+                    o.RequireHttpsMetadata = false;
+                    o.SaveToken = true;
+                    o.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidAudience = Configuration["Tokens:Issuer"],
+                        ValidIssuer = Configuration["Tokens:Issuer"],
+                        IssuerSigningKey =
+                            new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Tokens:Key"]))
+                    };
+                });
 
             services.AddMvc(
                     setupAction =>
@@ -51,11 +72,13 @@ namespace RepositoryApp.API
             services.AddSingleton<IEmailSender, EmailSender>();
             services.AddSingleton(Configuration);
             services.AddTransient<IRepositoryService, RepositoryService>();
+            services.AddTransient<IUserService, UserService>();
             services.AddTransient<IDirectoryRepositoryService, DirectoryRepositoryService>();
+            services.AddTransient<IDirectoryUserService, DirectoryUserService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ApplicationDbContext dbContext)
         {
             if (env.IsDevelopment())
                 app.UseDeveloperExceptionPage();
@@ -64,7 +87,7 @@ namespace RepositoryApp.API
             app.UseCors(builder => builder.AllowAnyOrigin());
             app.UseMvc();
 
-            //DbInitializeProvider.InitializeWithDefaults(dbContext);
+            DbInitializeProvider.InitializeWithDefaults(dbContext);
         }
     }
 }
