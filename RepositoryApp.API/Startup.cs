@@ -1,3 +1,4 @@
+using System;
 using System.Text;
 using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -15,6 +16,7 @@ using RepositoryApp.Data.Model;
 using RepositoryApp.Service.Providers;
 using RepositoryApp.Service.Services.Implementations;
 using RepositoryApp.Service.Services.Interfaces;
+using Swashbuckle.AspNetCore.Swagger;
 
 namespace RepositoryApp.API
 {
@@ -64,6 +66,12 @@ namespace RepositoryApp.API
                 .AddJsonOptions(option =>
                     option.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver());
 
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new Info{Title = "RepositoryApp", Version = "v1"});
+                //c.IncludeXmlComments(AppDomain.CurrentDomain.BaseDirectory + @"RepositoryApp.API.xml");
+            });
+
             // Register no-op EmailSender used by account confirmation and password reset during development
             // For more information on how to enable account confirmation and password reset please visit https://go.microsoft.com/fwlink/?LinkID=532713
             services.AddAutoMapper();
@@ -82,7 +90,13 @@ namespace RepositoryApp.API
 
             app.UseAuthentication();
             app.UseCors(builder => builder.AllowAnyOrigin());
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Repository App");
+            });
             app.UseMvc();
+            
 
             //DbInitializeProvider.InitializeWithDefaults(dbContext);
         }
