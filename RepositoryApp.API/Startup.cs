@@ -12,6 +12,7 @@ using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json.Serialization;
 using RepositoryApp.Data.DAL;
 using RepositoryApp.Data.Model;
+using RepositoryApp.Service.Providers;
 using RepositoryApp.Service.Services.Implementations;
 using RepositoryApp.Service.Services.Interfaces;
 
