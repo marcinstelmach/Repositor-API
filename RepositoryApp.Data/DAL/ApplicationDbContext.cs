@@ -25,12 +25,6 @@ namespace RepositoryApp.Data.DAL
             builder.Entity<Repository>().ToTable("Repository");
             builder.Entity<Version>().ToTable("Version");
             builder.Entity<File>().ToTable("File");
-
-            builder.Ignore<IdentityUserLogin<Guid>>();
-            builder.Ignore<IdentityUserRole<Guid>>();
-            builder.Ignore<IdentityUserClaim<Guid>>();
-            builder.Ignore<IdentityUserToken<Guid>>();
-            builder.Ignore<IdentityUser<Guid>>();
         }
     }
 }

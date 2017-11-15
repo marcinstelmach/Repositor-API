@@ -1,4 +1,5 @@
 using System.Text;
+using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -62,6 +63,7 @@ namespace RepositoryApp.API
                 .AddJsonOptions(option =>
                     option.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver());
 
+            services.AddAutoMapper();
             services.AddSwaggerGen(c => { c.SwaggerDoc("v1", new Info {Title = "RepositoryApp", Version = "v1"}); });
             services.AddSingleton(Configuration);
             services.AddTransient<IRepositoryService, RepositoryService>();
