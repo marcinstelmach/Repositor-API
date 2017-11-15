@@ -10,6 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json.Serialization;
 using RepositoryApp.Data.DAL;
+using RepositoryApp.Service.Providers;
 using RepositoryApp.Service.Services.Implementations;
 using RepositoryApp.Service.Services.Interfaces;
 using Swashbuckle.AspNetCore.Swagger;
@@ -29,7 +30,7 @@ namespace RepositoryApp.API
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("NewConnectionString")));
+                options.UseSqlServer(Configuration.GetConnectionString("ConnectionString")));
 
             services.AddAuthentication(cfg =>
                 {

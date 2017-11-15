@@ -22,9 +22,7 @@ namespace RepositoryApp.API
             CreateMap<User, UserForDisplayDto>()
                 .ForMember(dest => dest.CreatedDateTime,
                     opt => opt.MapFrom(src => src.CreationDateTime.ToShortDateString()))
-                .ForMember(dest => dest.Name, opt => opt.MapFrom(src => $"{src.FirstName} {src.LastName}"))
-                .ForMember(dest => dest.CountOfRepositories,
-                    opt => opt.MapFrom(src => src.Repositories.Count));
+                .ForMember(dest => dest.Name, opt => opt.MapFrom(src => $"{src.FirstName} {src.LastName}"));
             CreateMap<UserForLoginDto, User>();
 
             CreateMap<RepositoryForCreationDto, Repository>()

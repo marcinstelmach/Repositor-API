@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -101,12 +102,13 @@ namespace RepositoryApp.API.Controllers
             return Ok(usersDto);
         }
 
-        //[HttpGet("GetUserInfo")]
-        //public IActionResult GetUserInfo()
-        //{
-        //    var id = User.FindFirst(ClaimTypes.NameIdentifier).Value;
-        //    var email = User.FindFirst(JwtRegisteredClaimNames.Iat).Value;
-        //    return Ok(new {id = id, email = email});
-        //}
+        [Authorize]
+        [HttpGet("GetUserInfo")]
+        public IActionResult GetUserInfo()
+        {
+            var id = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            var email = User.FindFirst(JwtRegisteredClaimNames.Iat).Value;
+            return Ok(new { id = id, email = email });
+        }
     }
 }

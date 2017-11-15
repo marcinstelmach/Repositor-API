@@ -18,7 +18,6 @@ namespace RepositoryApp.API.Controllers
     public class RepositoryController : Controller
     {
         private readonly IConfiguration _configuration;
-        private readonly Guid _currentUserId;
         private readonly IDirectoryService _directoryService;
         private readonly IMapper _mapper;
         private readonly IRepositoryService _repositoryService;
@@ -35,13 +34,13 @@ namespace RepositoryApp.API.Controllers
             _mapper = mapper;
             _userService = userService;
             _configuration = configuration;
-            _currentUserId = Guid.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
         }
 
         [HttpGet]
         public async Task<IActionResult> GetRepositoriesForUser(Guid userId)
         {
-            if (_currentUserId != userId)
+            var currentUserId = Guid.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            if (currentUserId != userId)
                 return Unauthorized();
             if (!await _userService.UserExist(userId))
                 return BadRequest("User not found");
@@ -54,7 +53,8 @@ namespace RepositoryApp.API.Controllers
         [HttpGet("{repositoryId}", Name = "GetRepository")]
         public async Task<IActionResult> GetRepositories(Guid userId, Guid repositoryId)
         {
-            if (_currentUserId != userId)
+            var currentUserId = Guid.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            if (currentUserId != userId)
                 return Unauthorized();
 
             if (!await _userService.UserExist(userId))
@@ -72,7 +72,8 @@ namespace RepositoryApp.API.Controllers
             if (!ModelState.IsValid)
                 return new UnprocessableEntityObjectRestult(ModelState);
 
-            if (_currentUserId != userId)
+            var currentUserId = Guid.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            if (currentUserId != userId)
                 return Unauthorized();
 
             var user = await _userService.GetUser(userId);
@@ -110,7 +111,8 @@ namespace RepositoryApp.API.Controllers
         [HttpDelete("{repositoryId}")]
         public async Task<IActionResult> DeleteRepository(Guid userId, Guid repositoryId)
         {
-            if (_currentUserId != userId)
+            var currentUserId = Guid.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            if (currentUserId != userId)
                 return Unauthorized();
 
             var repository = await _repositoryService.GetRepositoryForUser(userId, repositoryId);
