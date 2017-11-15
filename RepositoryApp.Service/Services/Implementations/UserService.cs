@@ -4,13 +4,16 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.IdentityModel.Tokens.Jwt;
+using System.Security.Cryptography;
 using System.Security.Permissions;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using RepositoryApp.Data.DAL;
+using RepositoryApp.Data.Dto;
 using RepositoryApp.Data.Model;
+using RepositoryApp.Service.Providers;
 using RepositoryApp.Service.Services.Interfaces;
 
 namespace RepositoryApp.Service.Services.Implementations
@@ -51,9 +54,9 @@ namespace RepositoryApp.Service.Services.Implementations
         {
             var claims = new[]
             {
-                new Claim(JwtRegisteredClaimNames.Sub, user.Email),
+                new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                new Claim(JwtRegisteredClaimNames.Iat, user.Id.ToString())
+                new Claim(JwtRegisteredClaimNames.Iat, user.Email)
             };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Tokens:Key"]));
@@ -68,10 +71,33 @@ namespace RepositoryApp.Service.Services.Implementations
             var resultToken = new TokenModel
             {
                 Token = new JwtSecurityTokenHandler().WriteToken(token),
-                ValidTo = token.ValidTo
+                ValidTo = token.ValidTo,
+                Email = user.Email,
+                UserId = user.Id.ToString()
             };
 
             return resultToken;
+        }
+
+        public async Task RegisterUser(User user, string password)
+        {
+            new RNGCryptoServiceProvider().GetBytes(user.Salt = new byte[32]);
+            user.PasswordHash = PasswordHasher.HashPassword(password, user.Salt);
+            user.CreationDateTime = DateTime.Now;
+
+            await _dbContext.Users.AddAsync(user);
+        }
+
+        public async Task<User> FindUserByEmail(string email)
+        {
+            var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.Email == email);
+            return user;
+        }
+
+        public bool AuthenticateUser(User user, string password)
+        {
+            var passwordHash = PasswordHasher.HashPassword(password, user.Salt);
+            return user.PasswordHash.Equals(passwordHash);
         }
 
         public async Task<bool> SaveAsync()

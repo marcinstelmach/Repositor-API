@@ -33,11 +33,8 @@ namespace RepositoryApp.API
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+                options.UseSqlServer(Configuration.GetConnectionString("NewConnectionString")));
 
-            services.AddIdentity<User, ApplicationRole>(options => { options.User.RequireUniqueEmail = true; })
-                .AddEntityFrameworkStores<ApplicationDbContext>()
-                .AddDefaultTokenProviders();
             services.AddAuthentication(cfg =>
                 {
                     cfg.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -49,6 +46,10 @@ namespace RepositoryApp.API
                     o.SaveToken = true;
                     o.TokenValidationParameters = new TokenValidationParameters
                     {
+                        ValidateIssuer = true,
+                        ValidateAudience = true,
+                        ValidateLifetime = true,
+                        ValidateIssuerSigningKey = true,
                         ValidAudience = Configuration["Tokens:Issuer"],
                         ValidIssuer = Configuration["Tokens:Issuer"],
                         IssuerSigningKey =
@@ -69,11 +70,8 @@ namespace RepositoryApp.API
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new Info{Title = "RepositoryApp", Version = "v1"});
-                //c.IncludeXmlComments(AppDomain.CurrentDomain.BaseDirectory + @"RepositoryApp.API.xml");
             });
 
-            // Register no-op EmailSender used by account confirmation and password reset during development
-            // For more information on how to enable account confirmation and password reset please visit https://go.microsoft.com/fwlink/?LinkID=532713
             services.AddAutoMapper();
             services.AddSingleton<IEmailSender, EmailSender>();
             services.AddSingleton(Configuration);
@@ -89,7 +87,12 @@ namespace RepositoryApp.API
                 app.UseDeveloperExceptionPage();
 
             app.UseAuthentication();
-            app.UseCors(builder => builder.AllowAnyOrigin());
+            app.UseCors(builder =>
+            {
+                builder.AllowAnyOrigin();
+                builder.AllowAnyHeader();
+                builder.AllowAnyMethod();
+            });
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {

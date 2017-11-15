@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using RepositoryApp.Data.Dto;
 using RepositoryApp.Data.Model;
+using RepositoryApp.Service.Helpers;
 using StackExchange.Redis;
 
 namespace RepositoryApp.API
@@ -15,10 +16,11 @@ namespace RepositoryApp.API
     {
         public MappingProfile()
         {
+            var random = string.Empty;
             CreateMap<Repository, RepositoryForDisplayDto>();
             CreateMap<UserForCreationDto, User>()
-                .ForMember(dest => dest.UserName,
-                    opt => opt.MapFrom(src => CreateUsername(src.FirstName, src.LastName)));
+                .ForMember(dest => dest.UniqueName,
+                opt => opt.MapFrom(src => $"{CreateUsername(src.FirstName, src.LastName)}_{random.RandomString(10)}"));
             CreateMap<User, UserForDisplayDto>()
                 .ForMember(dest => dest.CreatedDateTime,
                     opt => opt.MapFrom(src => src.CreationDateTime.ToShortDateString()))

@@ -14,10 +14,5 @@ namespace RepositoryApp.Test.Tests
 {
     public class UserServiceTest
     {
-        private readonly Mock<ApplicationDbContext> _dbContext;
-        private readonly Mock<IConfiguration> _configuration;
-        private readonly IUserService _userService;
-
-
     }
 }

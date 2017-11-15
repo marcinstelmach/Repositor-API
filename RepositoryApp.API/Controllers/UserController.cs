@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
@@ -20,19 +22,15 @@ namespace RepositoryApp.API.Controllers
     public class UserController : Controller
     {
         private readonly IMapper _mapper;
-        private readonly SignInManager<User> _signInManager;
-        private readonly UserManager<User> _userManager;
         private readonly IUserService _userService;
         private readonly IHttpContextAccessor _accessor;
         private readonly IConfiguration _configuration;
         private readonly IDirectoryService _directoryService;
 
-        public UserController(IMapper mapper, SignInManager<User> signInManager, UserManager<User> userManager, IUserService userService, IHttpContextAccessor accessor, IConfiguration configuration,
+        public UserController(IMapper mapper, IUserService userService, IHttpContextAccessor accessor, IConfiguration configuration,
             IDirectoryService directoryService)
         {
             _mapper = mapper;
-            _signInManager = signInManager;
-            _userManager = userManager;
             _userService = userService;
             _accessor = accessor;
             _configuration = configuration;
@@ -46,15 +44,17 @@ namespace RepositoryApp.API.Controllers
             {
                 return new UnprocessableEntityObjectRestult(ModelState);
             }
-            var random = string.Empty;
-            var user = _mapper.Map<User>(userForCreationDto);
-            user.CreationDateTime = DateTime.Now;
-            user.EmailConfirmed = true;
-            user.UniqueName = $"{user.UserName}_{random.RandomString(10)}";
-            var result = await _userManager.CreateAsync(user, userForCreationDto.Password);
-            if (!result.Succeeded)
+
+            if (await _userService.FindUserByEmail(userForCreationDto.Email) != null)
             {
-                return BadRequest(result.Errors);
+                ModelState.AddModelError("email", "This email is already used");
+            }
+
+            var user = _mapper.Map<User>(userForCreationDto);
+            await _userService.RegisterUser(user, userForCreationDto.Password);
+            if (! await _userService.SaveAsync())
+            {
+                return StatusCode(500, "A problem with saving data");
             }
 
             var path = $"{_configuration["Paths:Defaultpath"]}{user.UniqueName}";
@@ -74,10 +74,35 @@ namespace RepositoryApp.API.Controllers
             return CreatedAtRoute("GetUser", new {userId = userDto.Id}, userDto);
         }
 
+        [AllowAnonymous]
+        [HttpPost("Token")]
+        public async Task<IActionResult> GetToken([FromBody] UserForLoginDto userForLogin)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
+            var user = await _userService.FindUserByEmail(userForLogin.Email);
+            if (user == null)
+            {
+                return BadRequest("User not Found");
+            }
+
+            if (!_userService.AuthenticateUser(user, userForLogin.Password))
+            {
+                return BadRequest("Invalid email or password");
+            }
+
+            var token = _userService.GenerateTokenForUser(user);
+            return Ok(token);
+        }
+
         [Authorize]
         [HttpGet("{userId}", Name = "GetUser")]
         public async Task<IActionResult> GetUser(Guid userId)
         {
+            
             var currentUserId = _accessor.CurrentUser();
             if (currentUserId!=userId)
             {
@@ -102,26 +127,14 @@ namespace RepositoryApp.API.Controllers
             return Ok(usersDto);
         }
 
-        [AllowAnonymous]
-        [HttpPost("Token")]
-        public async Task<IActionResult> GetToken([FromBody] UserForLoginDto userForLogin)
+        [HttpGet("GetUserInfo")]
+        public IActionResult GetUserInfo()
         {
-            var user = await _userManager.FindByEmailAsync(userForLogin.Email);
-            if (user == null)
-            {
-                return BadRequest("User not found");
-            }
-
-            var token = _userService.GenerateTokenForUser(user);
-            return Ok(token);
+            var id = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            var email = User.FindFirst(JwtRegisteredClaimNames.Iat).Value;
+            return Ok(new {id = id, email = email});
         }
 
-        [Authorize]
-        [HttpGet("Logout")]
-        public async Task<IActionResult> Logout()
-        {
-            await _signInManager.SignOutAsync();
-            return Ok();
-        }
+        
     }
 }

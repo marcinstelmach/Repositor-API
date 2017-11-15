@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using RepositoryApp.Data.DAL;
 using RepositoryApp.Data.Model;
 using RepositoryApp.Service.Helpers;
@@ -18,22 +19,19 @@ namespace RepositoryApp.Service.Providers
             if (dbContext.Users.Any())
                 return;
             var random = string.Empty;
+            byte[] salt;
+            new RNGCryptoServiceProvider().GetBytes(salt = new byte[32]);
             var users = new List<User>
             {
                 new User
                 {
                     Id = Guid.NewGuid(),
                     Email = "test@gmail.com",
-                    UserName = "tescik",
-                    EmailConfirmed = true,
-                    PasswordHash =
-                        "AQAAAAEAACcQAAAAEMtt9h4GOrsKAmzphBrm+Uk4ZJpwlwouaMW8dQD2oHet7f5BIRZPYfgu3ZoR2m1Wdg==",
-                    NormalizedEmail = "TEST@GMAIL.COM",
-                    NormalizedUserName = "TEST@GMAIL.COM",
+                    PasswordHash =PasswordHasher.HashPassword("1qaz@WSX", salt),
                     UniqueName = $"tescik{random.RandomString(10)}",
-                    LockoutEnabled = true,
                     FirstName = "Jan",
                     LastName = "Kowalski",
+                    Salt = salt,
                     CreationDateTime = DateTime.Now,
                     Repositories = new List<Repository>
                     {
