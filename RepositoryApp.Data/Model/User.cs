@@ -1,15 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Reflection.Metadata.Ecma335;
-using Microsoft.AspNetCore.Identity;
 
 namespace RepositoryApp.Data.Model
 {
     public class User
     {
         [Key]
-        public Guid  Id { get; set; }
+        public Guid Id { get; set; }
+
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Email { get; set; }

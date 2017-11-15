@@ -1,14 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using AutoMapper;
 using RepositoryApp.Data.Dto;
 using RepositoryApp.Data.Model;
 using RepositoryApp.Service.Helpers;
-using StackExchange.Redis;
 
 namespace RepositoryApp.API
 {
@@ -20,11 +17,14 @@ namespace RepositoryApp.API
             CreateMap<Repository, RepositoryForDisplayDto>();
             CreateMap<UserForCreationDto, User>()
                 .ForMember(dest => dest.UniqueName,
-                opt => opt.MapFrom(src => $"{CreateUsername(src.FirstName, src.LastName)}_{random.RandomString(10)}"));
+                    opt => opt.MapFrom(
+                        src => $"{CreateUsername(src.FirstName, src.LastName)}_{random.RandomString(10)}"));
             CreateMap<User, UserForDisplayDto>()
                 .ForMember(dest => dest.CreatedDateTime,
                     opt => opt.MapFrom(src => src.CreationDateTime.ToShortDateString()))
-                .ForMember(dest => dest.Name, opt => opt.MapFrom(src => $"{src.FirstName} {src.LastName}"));
+                .ForMember(dest => dest.Name, opt => opt.MapFrom(src => $"{src.FirstName} {src.LastName}"))
+                .ForMember(dest => dest.CountOfRepositories,
+                    opt => opt.MapFrom(src => src.Repositories.Count));
             CreateMap<UserForLoginDto, User>();
 
             CreateMap<RepositoryForCreationDto, Repository>()

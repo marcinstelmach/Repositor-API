@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
@@ -8,7 +6,8 @@ namespace RepositoryApp.Service.Helpers
 {
     public class UnprocessableEntityObjectRestult : ObjectResult
     {
-        public UnprocessableEntityObjectRestult(ModelStateDictionary modelState) : base(new SerializableError(modelState))
+        public UnprocessableEntityObjectRestult(ModelStateDictionary modelState) : base(
+            new SerializableError(modelState))
         {
             if (modelState == null)
                 throw new ArgumentNullException(nameof(modelState));

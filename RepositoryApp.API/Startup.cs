@@ -1,10 +1,7 @@
-using System;
 using System.Text;
-using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -12,8 +9,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json.Serialization;
 using RepositoryApp.Data.DAL;
-using RepositoryApp.Data.Model;
-using RepositoryApp.Service.Providers;
 using RepositoryApp.Service.Services.Implementations;
 using RepositoryApp.Service.Services.Interfaces;
 using Swashbuckle.AspNetCore.Swagger;
@@ -67,13 +62,7 @@ namespace RepositoryApp.API
                 .AddJsonOptions(option =>
                     option.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver());
 
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new Info{Title = "RepositoryApp", Version = "v1"});
-            });
-
-            services.AddAutoMapper();
-            services.AddSingleton<IEmailSender, EmailSender>();
+            services.AddSwaggerGen(c => { c.SwaggerDoc("v1", new Info {Title = "RepositoryApp", Version = "v1"}); });
             services.AddSingleton(Configuration);
             services.AddTransient<IRepositoryService, RepositoryService>();
             services.AddTransient<IUserService, UserService>();
@@ -94,12 +83,9 @@ namespace RepositoryApp.API
                 builder.AllowAnyMethod();
             });
             app.UseSwagger();
-            app.UseSwaggerUI(c =>
-            {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Repository App");
-            });
+            app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1/swagger.json", "Repository App"); });
             app.UseMvc();
-            
+
 
             //DbInitializeProvider.InitializeWithDefaults(dbContext);
         }

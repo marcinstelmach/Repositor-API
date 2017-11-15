@@ -1,6 +1,5 @@
 ﻿using System;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using RepositoryApp.Data.Model;
 using Version = RepositoryApp.Data.Model.Version;

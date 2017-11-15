@@ -1,15 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.Extensions.Configuration;
 using RepositoryApp.Data.Dto;
 using RepositoryApp.Data.Model;
@@ -21,18 +16,16 @@ namespace RepositoryApp.API.Controllers
     [Route("api/Users")]
     public class UserController : Controller
     {
-        private readonly IMapper _mapper;
-        private readonly IUserService _userService;
-        private readonly IHttpContextAccessor _accessor;
         private readonly IConfiguration _configuration;
         private readonly IDirectoryService _directoryService;
+        private readonly IMapper _mapper;
+        private readonly IUserService _userService;
 
-        public UserController(IMapper mapper, IUserService userService, IHttpContextAccessor accessor, IConfiguration configuration,
+        public UserController(IMapper mapper, IUserService userService, IConfiguration configuration,
             IDirectoryService directoryService)
         {
             _mapper = mapper;
             _userService = userService;
-            _accessor = accessor;
             _configuration = configuration;
             _directoryService = directoryService;
         }
@@ -41,34 +34,26 @@ namespace RepositoryApp.API.Controllers
         public async Task<IActionResult> Register([FromBody] UserForCreationDto userForCreationDto)
         {
             if (!ModelState.IsValid)
-            {
                 return new UnprocessableEntityObjectRestult(ModelState);
-            }
 
             if (await _userService.FindUserByEmail(userForCreationDto.Email) != null)
-            {
                 ModelState.AddModelError("email", "This email is already used");
-            }
 
             var user = _mapper.Map<User>(userForCreationDto);
             await _userService.RegisterUser(user, userForCreationDto.Password);
-            if (! await _userService.SaveAsync())
-            {
+            if (!await _userService.SaveAsync())
                 return StatusCode(500, "A problem with saving data");
-            }
 
             var path = $"{_configuration["Paths:Defaultpath"]}{user.UniqueName}";
             if (_directoryService.DirectoryExist(path))
-            {
                 return StatusCode(500, "Something goes wrong...");
-            }
             try
             {
                 await _directoryService.CreateDirectory(path);
             }
             catch (Exception e)
             {
-                return StatusCode(500, "Can't create directory for user..."+e.Message);
+                return StatusCode(500, "Can't create directory for user..." + e.Message);
             }
             var userDto = _mapper.Map<UserForDisplayDto>(user);
             return CreatedAtRoute("GetUser", new {userId = userDto.Id}, userDto);
@@ -79,20 +64,14 @@ namespace RepositoryApp.API.Controllers
         public async Task<IActionResult> GetToken([FromBody] UserForLoginDto userForLogin)
         {
             if (!ModelState.IsValid)
-            {
                 return BadRequest();
-            }
 
             var user = await _userService.FindUserByEmail(userForLogin.Email);
             if (user == null)
-            {
                 return BadRequest("User not Found");
-            }
 
             if (!_userService.AuthenticateUser(user, userForLogin.Password))
-            {
                 return BadRequest("Invalid email or password");
-            }
 
             var token = _userService.GenerateTokenForUser(user);
             return Ok(token);
@@ -102,17 +81,12 @@ namespace RepositoryApp.API.Controllers
         [HttpGet("{userId}", Name = "GetUser")]
         public async Task<IActionResult> GetUser(Guid userId)
         {
-            
-            var currentUserId = _accessor.CurrentUser();
-            if (currentUserId!=userId)
-            {
+            var currentUserId = Guid.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            if (currentUserId != userId)
                 return Unauthorized();
-            }
             var user = await _userService.GetUser(userId);
             if (user == null)
-            {
                 return BadRequest("User not Found");
-            }
 
             var userDto = _mapper.Map<UserForDisplayDto>(user);
             return Ok(userDto);
@@ -127,14 +101,12 @@ namespace RepositoryApp.API.Controllers
             return Ok(usersDto);
         }
 
-        [HttpGet("GetUserInfo")]
-        public IActionResult GetUserInfo()
-        {
-            var id = User.FindFirst(ClaimTypes.NameIdentifier).Value;
-            var email = User.FindFirst(JwtRegisteredClaimNames.Iat).Value;
-            return Ok(new {id = id, email = email});
-        }
-
-        
+        //[HttpGet("GetUserInfo")]
+        //public IActionResult GetUserInfo()
+        //{
+        //    var id = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+        //    var email = User.FindFirst(JwtRegisteredClaimNames.Iat).Value;
+        //    return Ok(new {id = id, email = email});
+        //}
     }
 }

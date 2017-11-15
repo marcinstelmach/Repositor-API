@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using RepositoryApp.Data.Dto;
@@ -27,16 +27,15 @@ namespace RepositoryApp.API.Controllers
         public RepositoryController(IRepositoryService repositoryService,
             IDirectoryService directoryService,
             IMapper mapper,
-            IHttpContextAccessor accessor,
             IUserService userService,
             IConfiguration configuration)
         {
             _repositoryService = repositoryService;
             _directoryService = directoryService;
             _mapper = mapper;
-            _currentUserId = accessor.CurrentUser();
             _userService = userService;
             _configuration = configuration;
+            _currentUserId = Guid.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
         }
 
         [HttpGet]
@@ -116,9 +115,7 @@ namespace RepositoryApp.API.Controllers
 
             var repository = await _repositoryService.GetRepositoryForUser(userId, repositoryId);
             if (repository == null)
-            {
                 return BadRequest($"Repository {repositoryId} doesn't exist");
-            }
             var user = await _userService.GetUser(userId);
             var path = $"{_configuration["Paths:DefaultPath"]}\\{user.UniqueName}\\{repository.UniqueName}";
 
@@ -134,13 +131,9 @@ namespace RepositoryApp.API.Controllers
             }
 
             if (!await _repositoryService.SaveAsync())
-            {
                 return StatusCode(500, "Fail while saving database");
-            }
 
             return NoContent();
         }
-
-
     }
 }

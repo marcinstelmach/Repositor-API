@@ -27,7 +27,7 @@ namespace RepositoryApp.Service.Providers
                 {
                     Id = Guid.NewGuid(),
                     Email = "test@gmail.com",
-                    PasswordHash =PasswordHasher.HashPassword("1qaz@WSX", salt),
+                    PasswordHash = PasswordHasher.HashPassword("1qaz@WSX", salt),
                     UniqueName = $"tescik{random.RandomString(10)}",
                     FirstName = "Jan",
                     LastName = "Kowalski",
