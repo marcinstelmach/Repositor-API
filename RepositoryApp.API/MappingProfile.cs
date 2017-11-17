@@ -45,6 +45,9 @@ namespace RepositoryApp.API
                     opt => opt.MapFrom(src => $"{src.Name.Replace(' ', '_')}_{random.RandomString(10)}"));
 
             CreateMap<Data.Model.Version, VersionForDisplay>();
+
+            CreateMap<FileForCreation, File>();
+            CreateMap<File, FileForDisplay>();
         }
 
         private static string CreateUsername(string firstName, string lastName)

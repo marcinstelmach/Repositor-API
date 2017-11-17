@@ -43,16 +43,12 @@ namespace RepositoryApp.API.Controllers
                 return BadRequest("User not found");
 
             var repositories = await _repositoryService.GetRepositoriesForUser(userId);
-            if (repositories == null)
-            {
-                return BadRequest();
-            }
             var repositoryForDisplay = _mapper.Map<IList<RepositoryForDisplayDto>>(repositories);
             return Ok(repositoryForDisplay);
         }
 
         [HttpGet("{repositoryId}", Name = "GetRepository")]
-        public async Task<IActionResult> GetRepositories(Guid userId, Guid repositoryId)
+        public async Task<IActionResult> GetRepository(Guid userId, Guid repositoryId)
         {
             var currentUserId = Guid.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             if (currentUserId != userId)
