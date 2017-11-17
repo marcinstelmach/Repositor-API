@@ -48,6 +48,7 @@ namespace RepositoryApp.API
 
             CreateMap<FileForCreation, File>();
             CreateMap<File, FileForDisplay>();
+            CreateMap<FileForCreation, File>();
         }
 
         private static string CreateUsername(string firstName, string lastName)

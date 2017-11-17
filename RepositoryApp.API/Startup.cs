@@ -71,6 +71,7 @@ namespace RepositoryApp.API
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<IDirectoryService, DirectoryService>();
             services.AddTransient<IVersionService, VersionService>();
+            services.AddTransient<IFileService, FileService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
