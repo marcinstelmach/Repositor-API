@@ -104,15 +104,6 @@ namespace RepositoryApp.API.Controllers
         }
 
         [Authorize]
-        [HttpGet("GetUserInfo")]
-        public IActionResult GetUserInfo()
-        {
-            var id = User.FindFirst(ClaimTypes.NameIdentifier).Value;
-            var email = User.FindFirst(JwtRegisteredClaimNames.Iat).Value;
-            return Ok(new { id = id, email = email });
-        }
-
-        [Authorize]
         [HttpDelete("{userId}")]
         public async Task<IActionResult> DeleteUser(Guid userId)
         {

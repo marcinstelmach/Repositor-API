@@ -43,6 +43,10 @@ namespace RepositoryApp.API.Controllers
                 return BadRequest("User not found");
 
             var repositories = await _repositoryService.GetRepositoriesForUser(userId);
+            if (repositories == null)
+            {
+                return BadRequest();
+            }
             var repositoryForDisplay = _mapper.Map<IList<RepositoryForDisplayDto>>(repositories);
             return Ok(repositoryForDisplay);
         }
@@ -58,6 +62,10 @@ namespace RepositoryApp.API.Controllers
                 return BadRequest("User not found");
 
             var repository = await _repositoryService.GetRepositoryForUser(userId, repositoryId);
+            if (repository == null)
+            {
+                return BadRequest();
+            }
             var repositoryForDisplay = _mapper.Map<RepositoryForDisplayDto>(repository);
             return Ok(repositoryForDisplay);
         }

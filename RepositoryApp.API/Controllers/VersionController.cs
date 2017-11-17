@@ -47,6 +47,10 @@ namespace RepositoryApp.API.Controllers
             }
 
             var versions = await _versionService.GetVersionsForUserAsync(repositoryId);
+            if (versions == null)
+            {
+                return BadRequest();
+            }
             var versionsDto = _mapper.Map<IList<VersionForDisplay>>(versions);
             return Ok(versionsDto);
 
@@ -63,6 +67,10 @@ namespace RepositoryApp.API.Controllers
             }
 
             var version = await _versionService.GetVersionByIdAsync(versionId);
+            if (version == null)
+            {
+                return BadRequest();
+            }
             var versionDto = _mapper.Map<VersionForDisplay>(version);
             return Ok(versionDto);
         }
