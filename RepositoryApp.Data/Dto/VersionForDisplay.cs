@@ -7,13 +7,13 @@ using RepositoryApp.Data.Model;
 
 namespace RepositoryApp.Data.Dto
 {
-    class VersionForDisplay
+    public class VersionForDisplay
     {
         public Guid Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public DateTime CreationDateTime { get; set; }
         public DateTime ModifDateTime { get; set; }
-        public Guid? RepositoryId { get; set; }
+        public Guid RepositoryId { get; set; }
     }
 }

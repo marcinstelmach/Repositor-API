@@ -18,6 +18,7 @@ namespace RepositoryApp.Data.Model
         [ForeignKey("User")]
         public Guid UserId { get; set; }
 
+        public string Path { get; set; }
         public User User { get; set; }
         public IList<Version> Versions { get; set; }
     }

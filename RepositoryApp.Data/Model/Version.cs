@@ -17,9 +17,10 @@ namespace RepositoryApp.Data.Model
         public DateTime ModifDateTime { get; set; }
 
         [ForeignKey("Repository")]
-        public Guid? RepositoryId { get; set; }
+        public Guid RepositoryId { get; set; }
 
         public Repository Repository { get; set; }
+        public string Path { get; set; }
         public IList<File> Files { get; set; }
     }
 }

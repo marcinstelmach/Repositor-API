@@ -16,6 +16,7 @@ namespace RepositoryApp.Data.Model
         public byte[] Salt { get; set; }
         public DateTime CreationDateTime { get; set; }
         public string UniqueName { get; set; }
+        public string Path { get; set; }
         public IList<Repository> Repositories { get; set; }
     }
 }

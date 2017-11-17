@@ -41,16 +41,17 @@ namespace RepositoryApp.API.Controllers
                 ModelState.AddModelError("email", "This email is already used");
 
             var user = _mapper.Map<User>(userForCreationDto);
+            user.Path = $"{_configuration["Paths:Defaultpath"]}{user.UniqueName}\\";
             await _userService.RegisterUser(user, userForCreationDto.Password);
             if (!await _userService.SaveAsync())
                 return StatusCode(500, "A problem with saving data");
 
-            var path = $"{_configuration["Paths:Defaultpath"]}{user.UniqueName}";
-            if (_directoryService.DirectoryExist(path))
+
+            if (_directoryService.DirectoryExist(user.Path))
                 return StatusCode(500, "Something goes wrong...");
             try
             {
-                await _directoryService.CreateDirectory(path);
+                await _directoryService.CreateDirectory(user.Path);
             }
             catch (Exception e)
             {
@@ -109,6 +110,41 @@ namespace RepositoryApp.API.Controllers
             var id = User.FindFirst(ClaimTypes.NameIdentifier).Value;
             var email = User.FindFirst(JwtRegisteredClaimNames.Iat).Value;
             return Ok(new { id = id, email = email });
+        }
+
+        [Authorize]
+        [HttpDelete("{userId}")]
+        public async Task<IActionResult> DeleteUser(Guid userId)
+        {
+            var currentUserId = Guid.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            if (currentUserId != userId)
+            {
+                return Unauthorized();
+            }
+
+            var user = await _userService.GetUser(userId);
+            if (user == null)
+            {
+                return BadRequest();
+            }
+
+            try
+            {
+                await _directoryService.RemoveDirectory(user.Path);
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, e.Message);
+            }
+
+
+            await _userService.RemoveUser(user);
+            if (! await _userService.SaveAsync())
+            {
+                return StatusCode(500, "Fault while saving database");
+            }
+
+            return NoContent();
         }
     }
 }

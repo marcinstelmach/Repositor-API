@@ -33,6 +33,7 @@ namespace RepositoryApp.Service.Providers
                     LastName = "Kowalski",
                     Salt = salt,
                     CreationDateTime = DateTime.Now,
+                    Path = "",
                     Repositories = new List<Repository>
                     {
                         new Repository
@@ -42,6 +43,7 @@ namespace RepositoryApp.Service.Providers
                             UniqueName = $"MyRepository1_{random.RandomString(10)}",
                             CreationDateTime = DateTime.Now,
                             ModifyDateTime = DateTime.Now,
+                            Path = "",
                             Versions = new List<Version>
                             {
                                 new Version
@@ -52,7 +54,7 @@ namespace RepositoryApp.Service.Providers
                                     Description = "For Test",
                                     CreationDateTime = DateTime.Now,
                                     ModifDateTime = DateTime.Now,
-                                    RepositoryId = null,
+                                    Path = "",
                                     Files = new List<File>
                                     {
                                         new File
@@ -60,13 +62,15 @@ namespace RepositoryApp.Service.Providers
                                             Id = Guid.NewGuid(),
                                             Name = "FileOne",
                                             UniqueName = $"FileOne_{random.RandomString(10)}",
-                                            CreationDateTime = DateTime.Now
+                                            CreationDateTime = DateTime.Now,
+                                            Path = ""
                                         },
                                         new File
                                         {
                                             Id = Guid.NewGuid(),
                                             Name = "FileTwo",
                                             UniqueName = $"FileTwo_{random.RandomString(10)}",
+                                            Path = "",
                                             CreationDateTime = DateTime.Now
                                         }
                                     }
@@ -79,7 +83,7 @@ namespace RepositoryApp.Service.Providers
                                     Description = "For Test",
                                     CreationDateTime = DateTime.Now,
                                     ModifDateTime = DateTime.Now,
-                                    RepositoryId = null,
+                                    Path = "",
                                     Files = new List<File>
                                     {
                                         new File
@@ -87,6 +91,7 @@ namespace RepositoryApp.Service.Providers
                                             Id = Guid.NewGuid(),
                                             Name = "FileOne",
                                             UniqueName = $"FileOne_{random.RandomString(10)}",
+                                            Path = "",
                                             CreationDateTime = DateTime.Now
                                         },
                                         new File
@@ -94,6 +99,7 @@ namespace RepositoryApp.Service.Providers
                                             Id = Guid.NewGuid(),
                                             Name = "FileTwo",
                                             UniqueName = $"FileTwo_{random.RandomString(10)}",
+                                            Path = "",
                                             CreationDateTime = DateTime.Now
                                         },
                                         new File
@@ -101,6 +107,7 @@ namespace RepositoryApp.Service.Providers
                                             Id = Guid.NewGuid(),
                                             Name = "FileThree",
                                             UniqueName = $"FileThree_{random.RandomString(10)}",
+                                            Path = "",
                                             CreationDateTime = DateTime.Now
                                         }
                                     }
@@ -114,6 +121,7 @@ namespace RepositoryApp.Service.Providers
                             UniqueName = $"MyRepository2_{random.RandomString(10)}",
                             CreationDateTime = DateTime.Now,
                             ModifyDateTime = DateTime.Now,
+                            Path = "",
                             Versions = new List<Version>
                             {
                                 new Version
@@ -124,7 +132,7 @@ namespace RepositoryApp.Service.Providers
                                     Description = "For Test",
                                     CreationDateTime = DateTime.Now,
                                     ModifDateTime = DateTime.Now,
-                                    RepositoryId = null,
+                                    Path = "",
                                     Files = new List<File>
                                     {
                                         new File
@@ -132,6 +140,7 @@ namespace RepositoryApp.Service.Providers
                                             Id = Guid.NewGuid(),
                                             Name = "FileOne",
                                             UniqueName = $"FileOne_{random.RandomString(10)}",
+                                            Path = "",
                                             CreationDateTime = DateTime.Now
                                         },
                                         new File
@@ -139,6 +148,7 @@ namespace RepositoryApp.Service.Providers
                                             Id = Guid.NewGuid(),
                                             Name = "FileTwo",
                                             UniqueName = $"FileTwo_{random.RandomString(10)}",
+                                            Path = "",
                                             CreationDateTime = DateTime.Now
                                         }
                                     }
@@ -151,7 +161,7 @@ namespace RepositoryApp.Service.Providers
                                     Description = "For Test",
                                     CreationDateTime = DateTime.Now,
                                     ModifDateTime = DateTime.Now,
-                                    RepositoryId = null,
+                                    Path = "",
                                     Files = new List<File>
                                     {
                                         new File
@@ -159,6 +169,7 @@ namespace RepositoryApp.Service.Providers
                                             Id = Guid.NewGuid(),
                                             Name = "FileOne",
                                             UniqueName = $"FileOne_{random.RandomString(10)}",
+                                            Path = "",
                                             CreationDateTime = DateTime.Now
                                         },
                                         new File
@@ -166,6 +177,7 @@ namespace RepositoryApp.Service.Providers
                                             Id = Guid.NewGuid(),
                                             Name = "FileTwo",
                                             UniqueName = $"FileTwo_{random.RandomString(10)}",
+                                            Path = "",
                                             CreationDateTime = DateTime.Now
                                         },
                                         new File
@@ -173,6 +185,7 @@ namespace RepositoryApp.Service.Providers
                                             Id = Guid.NewGuid(),
                                             Name = "FileThree",
                                             UniqueName = $"FileThree_{random.RandomString(10)}",
+                                            Path = "",
                                             CreationDateTime = DateTime.Now
                                         }
                                     }
