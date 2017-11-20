@@ -46,7 +46,9 @@ namespace RepositoryApp.API
 
             CreateMap<Data.Model.Version, VersionForDisplay>();
 
-            CreateMap<FileForCreation, File>();
+            CreateMap<FileForCreation, File>()
+                .ForMember(dest => dest.CreationDateTime,
+                    opt => opt.UseValue(DateTime.Now));
             CreateMap<File, FileForDisplay>();
             CreateMap<FileForCreation, File>();
         }

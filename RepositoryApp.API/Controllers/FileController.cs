@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using RepositoryApp.Data.Dto;
 using RepositoryApp.Service.Services.Interfaces;
+using File = RepositoryApp.Data.Model.File;
 
 namespace RepositoryApp.API.Controllers
 {
@@ -60,11 +61,6 @@ namespace RepositoryApp.API.Controllers
             return Ok(fileDto);
         }
 
-        //[HttpGet("{fileId}", Name = "DownloadFile")]
-        //public async Task<IActionResult> DowloadFile(Guid fileId)
-        //{
-        //    throw NotImplementedException;
-        //}
 
         [HttpDelete("{fileId}")]
         public async Task<IActionResult> DeleteFile(Guid userId, Guid repositoryId, Guid versionId, Guid fileId)
@@ -114,6 +110,14 @@ namespace RepositoryApp.API.Controllers
             };
 
             var fileToAdd = _mapper.Map<Data.Model.File>(fileForCreate);
+            fileToAdd.Path = path;
+            fileToAdd.ContentType = file.ContentType;
+
+            version.Files = new List<File>
+            {
+                fileToAdd
+            };
+
             if (! await _fileService.SaveChangesAsync())
             {
                 return StatusCode(500, "Fail while saving");
@@ -123,53 +127,26 @@ namespace RepositoryApp.API.Controllers
         }
 
 
-        //[HttpGet("{fileName}")]
-        //public async Task<IActionResult> Download(string fileName)
-        //{
-        //    if (fileName == null)
-        //    {
-        //        return BadRequest();
-        //    }
+        [HttpGet("download/{fileId}", Name = "DownloadFile")]
+        public async Task<IActionResult> DowloadFile(Guid userId, Guid repositoryId, Guid versionId, Guid fileId)
+        {
+            var currentUserId = Guid.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            if (currentUserId != userId)
+                return Unauthorized();
 
-        //    var path = Path.Combine(
-        //        Directory.GetCurrentDirectory(),
-        //        "wwwroot", fileName);
+            var file = await _fileService.GetFileByIdAsync(fileId);
+            if (file == null)
+            {
+                return BadRequest();
+            }
 
-        //    var memory = new MemoryStream();
-        //    using (var stream = new FileStream(path, FileMode.Open))
-        //    {
-        //        await stream.CopyToAsync(memory);
-        //    }
-        //    memory.Position = 0;
-        //    return File(memory, GetContentType(path), Path.GetFileName(path));
-        //}
-
-        //private string GetContentType(string path)
-        //{
-        //    var types = GetMimeTypes();
-        //    var ext = Path.GetExtension(path).ToLowerInvariant();
-        //    return types[ext];
-        //}
-
-        //private Dictionary<string, string> GetMimeTypes()
-        //{
-        //    return new Dictionary<string, string>
-        //    {
-        //        {".txt", "text/plain"},
-        //        {".pdf", "application/pdf"},
-        //        {".doc", "application/vnd.ms-word"},
-        //        {".docx", "application/vnd.ms-word"},
-        //        {".xls", "application/vnd.ms-excel"},
-        //        {
-        //            ".xlsx", "application/vnd.openxmlformatsofficedocument.spreadsheetml.sheet"},
-        //        {".png", "image/png"
-        //        },
-        //        {".jpg", "image/jpeg"},
-        //        {".jpeg", "image/jpeg"},
-        //        {".gif", "image/gif"},
-        //        {".csv", "text/csv"}
-        //    };
-
-        //}
+            var memory = new MemoryStream();
+            using (var stream = new FileStream(file.Path, FileMode.Open))
+            {
+                await stream.CopyToAsync(memory);
+            }
+            memory.Position = 0;
+            return File(memory, file.ContentType, Path.GetFileName(file.Path));
+        }
     }
 }

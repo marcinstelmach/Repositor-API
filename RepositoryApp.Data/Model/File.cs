@@ -11,6 +11,7 @@ namespace RepositoryApp.Data.Model
         public string Name { get; set; }
         public string UniqueName { get; set; }
         public DateTime CreationDateTime { get; set; }
+        public string ContentType { get; set; }
         public string Path { get; set; }
         [ForeignKey("Version")]
         public Guid VersionId { get; set; }

@@ -63,7 +63,8 @@ namespace RepositoryApp.Service.Providers
                                             Name = "FileOne",
                                             UniqueName = $"FileOne_{random.RandomString(10)}",
                                             CreationDateTime = DateTime.Now,
-                                            Path = ""
+                                            Path = "",
+                                            ContentType = ""
                                         },
                                         new File
                                         {
@@ -71,6 +72,7 @@ namespace RepositoryApp.Service.Providers
                                             Name = "FileTwo",
                                             UniqueName = $"FileTwo_{random.RandomString(10)}",
                                             Path = "",
+                                            ContentType = "",
                                             CreationDateTime = DateTime.Now
                                         }
                                     }
@@ -92,6 +94,7 @@ namespace RepositoryApp.Service.Providers
                                             Name = "FileOne",
                                             UniqueName = $"FileOne_{random.RandomString(10)}",
                                             Path = "",
+                                            ContentType = "",
                                             CreationDateTime = DateTime.Now
                                         },
                                         new File
@@ -100,6 +103,7 @@ namespace RepositoryApp.Service.Providers
                                             Name = "FileTwo",
                                             UniqueName = $"FileTwo_{random.RandomString(10)}",
                                             Path = "",
+                                            ContentType = "",
                                             CreationDateTime = DateTime.Now
                                         },
                                         new File
@@ -108,6 +112,7 @@ namespace RepositoryApp.Service.Providers
                                             Name = "FileThree",
                                             UniqueName = $"FileThree_{random.RandomString(10)}",
                                             Path = "",
+                                            ContentType = "",
                                             CreationDateTime = DateTime.Now
                                         }
                                     }
@@ -141,6 +146,7 @@ namespace RepositoryApp.Service.Providers
                                             Name = "FileOne",
                                             UniqueName = $"FileOne_{random.RandomString(10)}",
                                             Path = "",
+                                            ContentType = "",
                                             CreationDateTime = DateTime.Now
                                         },
                                         new File
@@ -149,6 +155,7 @@ namespace RepositoryApp.Service.Providers
                                             Name = "FileTwo",
                                             UniqueName = $"FileTwo_{random.RandomString(10)}",
                                             Path = "",
+                                            ContentType = "",
                                             CreationDateTime = DateTime.Now
                                         }
                                     }
@@ -170,6 +177,7 @@ namespace RepositoryApp.Service.Providers
                                             Name = "FileOne",
                                             UniqueName = $"FileOne_{random.RandomString(10)}",
                                             Path = "",
+                                            ContentType = "",
                                             CreationDateTime = DateTime.Now
                                         },
                                         new File
@@ -178,6 +186,7 @@ namespace RepositoryApp.Service.Providers
                                             Name = "FileTwo",
                                             UniqueName = $"FileTwo_{random.RandomString(10)}",
                                             Path = "",
+                                            ContentType = "",
                                             CreationDateTime = DateTime.Now
                                         },
                                         new File
@@ -186,6 +195,7 @@ namespace RepositoryApp.Service.Providers
                                             Name = "FileThree",
                                             UniqueName = $"FileThree_{random.RandomString(10)}",
                                             Path = "",
+                                            ContentType = "",
                                             CreationDateTime = DateTime.Now
                                         }
                                     }
