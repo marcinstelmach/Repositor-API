@@ -34,11 +34,11 @@ namespace RepositoryApp.API.Controllers
         [HttpPost]
         public async Task<IActionResult> Register([FromBody] UserForCreationDto userForCreationDto)
         {
-            if (!ModelState.IsValid)
-                return new UnprocessableEntityObjectRestult(ModelState);
-
             if (await _userService.FindUserByEmail(userForCreationDto.Email) != null)
                 ModelState.AddModelError("email", "This email is already used");
+
+            if (!ModelState.IsValid)
+                return new UnprocessableEntityObjectRestult(ModelState);
 
             var user = _mapper.Map<User>(userForCreationDto);
             user.Path = $"{_configuration["Paths:Defaultpath"]}{user.UniqueName}\\";
