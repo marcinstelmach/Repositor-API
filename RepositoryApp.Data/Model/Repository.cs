@@ -9,6 +9,7 @@ namespace RepositoryApp.Data.Model
     {
         [Key]
         public Guid Id { get; set; }
+
         public string Name { get; set; }
         public string UniqueName { get; set; }
         public DateTime CreationDateTime { get; set; }
@@ -17,6 +18,7 @@ namespace RepositoryApp.Data.Model
         [ForeignKey("User")]
         public Guid UserId { get; set; }
 
+        public string Path { get; set; }
         public User User { get; set; }
         public IList<Version> Versions { get; set; }
     }

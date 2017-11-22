@@ -1,10 +1,8 @@
-using System;
 using System.Text;
 using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -12,7 +10,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json.Serialization;
 using RepositoryApp.Data.DAL;
-using RepositoryApp.Data.Model;
 using RepositoryApp.Service.Providers;
 using RepositoryApp.Service.Services.Implementations;
 using RepositoryApp.Service.Services.Interfaces;
@@ -33,11 +30,8 @@ namespace RepositoryApp.API
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+                options.UseSqlServer(Configuration.GetConnectionString("ConnectionString")));
 
-            services.AddIdentity<User, ApplicationRole>(options => { options.User.RequireUniqueEmail = true; })
-                .AddEntityFrameworkStores<ApplicationDbContext>()
-                .AddDefaultTokenProviders();
             services.AddAuthentication(cfg =>
                 {
                     cfg.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -49,6 +43,10 @@ namespace RepositoryApp.API
                     o.SaveToken = true;
                     o.TokenValidationParameters = new TokenValidationParameters
                     {
+                        ValidateIssuer = true,
+                        ValidateAudience = true,
+                        ValidateLifetime = true,
+                        ValidateIssuerSigningKey = true,
                         ValidAudience = Configuration["Tokens:Issuer"],
                         ValidIssuer = Configuration["Tokens:Issuer"],
                         IssuerSigningKey =
@@ -66,20 +64,13 @@ namespace RepositoryApp.API
                 .AddJsonOptions(option =>
                     option.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver());
 
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new Info{Title = "RepositoryApp", Version = "v1"});
-                //c.IncludeXmlComments(AppDomain.CurrentDomain.BaseDirectory + @"RepositoryApp.API.xml");
-            });
-
-            // Register no-op EmailSender used by account confirmation and password reset during development
-            // For more information on how to enable account confirmation and password reset please visit https://go.microsoft.com/fwlink/?LinkID=532713
             services.AddAutoMapper();
-            services.AddSingleton<IEmailSender, EmailSender>();
+            services.AddSwaggerGen(c => { c.SwaggerDoc("v1", new Info {Title = "RepositoryApp", Version = "v1"}); });
             services.AddSingleton(Configuration);
             services.AddTransient<IRepositoryService, RepositoryService>();
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<IDirectoryService, DirectoryService>();
+            services.AddTransient<IVersionService, VersionService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -89,14 +80,16 @@ namespace RepositoryApp.API
                 app.UseDeveloperExceptionPage();
 
             app.UseAuthentication();
-            app.UseCors(builder => builder.AllowAnyOrigin());
-            app.UseSwagger();
-            app.UseSwaggerUI(c =>
+            app.UseCors(builder =>
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Repository App");
+                builder.AllowAnyOrigin();
+                builder.AllowAnyHeader();
+                builder.AllowAnyMethod();
             });
+            app.UseSwagger();
+            app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1/swagger.json", "Repository App"); });
             app.UseMvc();
-            
+
 
             DbInitializeProvider.InitializeWithDefaults(dbContext);
         }

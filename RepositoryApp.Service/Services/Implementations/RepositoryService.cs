@@ -1,14 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 using RepositoryApp.Data.DAL;
 using RepositoryApp.Data.Model;
-using RepositoryApp.Service.Providers;
 using RepositoryApp.Service.Services.Interfaces;
 
 namespace RepositoryApp.Service.Services.Implementations
@@ -26,9 +22,7 @@ namespace RepositoryApp.Service.Services.Implementations
         {
             var user = await _dbContext.Users.FirstOrDefaultAsync(s => s.Id == userId);
             if (user == null)
-            {
-                repository.Id=Guid.NewGuid();
-            }
+                repository.Id = Guid.NewGuid();
             user.Repositories = new List<Repository>();
             user.Repositories.Add(repository);
         }

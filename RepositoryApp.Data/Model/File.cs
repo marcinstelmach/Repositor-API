@@ -8,14 +8,12 @@ namespace RepositoryApp.Data.Model
     {
         [Key]
         public Guid Id { get; set; }
-
         public string Name { get; set; }
         public string UniqueName { get; set; }
         public DateTime CreationDateTime { get; set; }
-
+        public string Path { get; set; }
         [ForeignKey("Version")]
         public Guid VersionId { get; set; }
-
         public Version Version { get; set; }
     }
 }

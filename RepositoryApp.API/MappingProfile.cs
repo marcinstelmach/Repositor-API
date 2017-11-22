@@ -1,13 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using AutoMapper;
 using RepositoryApp.Data.Dto;
 using RepositoryApp.Data.Model;
-using StackExchange.Redis;
+using RepositoryApp.Service.Helpers;
 
 namespace RepositoryApp.API
 {
@@ -15,10 +13,15 @@ namespace RepositoryApp.API
     {
         public MappingProfile()
         {
+            var random = string.Empty;
             CreateMap<Repository, RepositoryForDisplayDto>();
+
             CreateMap<UserForCreationDto, User>()
-                .ForMember(dest => dest.UserName,
-                    opt => opt.MapFrom(src => CreateUsername(src.FirstName, src.LastName)));
+                .ForMember(dest => dest.UniqueName,
+                    opt => opt.MapFrom(
+                        src => $"{CreateUsername(src.FirstName, src.LastName)}_{random.RandomString(10)}"));
+
+
             CreateMap<User, UserForDisplayDto>()
                 .ForMember(dest => dest.CreatedDateTime,
                     opt => opt.MapFrom(src => src.CreationDateTime.ToShortDateString()))
@@ -29,7 +32,19 @@ namespace RepositoryApp.API
                 .ForMember(dest => dest.CreationDateTime,
                     opt => opt.UseValue(DateTime.Now))
                 .ForMember(dest => dest.ModifyDateTime,
-                    opt => opt.UseValue(DateTime.Now));
+                    opt => opt.UseValue(DateTime.Now))
+                    .ForMember(dest => dest.UniqueName,
+                    opt => opt.MapFrom(src => $"{src.Name.Replace(' ', '_')}_{random.RandomString(10)}"));
+
+            CreateMap<VersionForCreation, Data.Model.Version>()
+                .ForMember(dest => dest.CreationDateTime,
+                    opt => opt.UseValue(DateTime.Now))
+                .ForMember(dest => dest.ModifDateTime,
+                    opt => opt.UseValue(DateTime.Now))
+                .ForMember(dest => dest.UniqueName,
+                    opt => opt.MapFrom(src => $"{src.Name.Replace(' ', '_')}_{random.RandomString(10)}"));
+
+            CreateMap<Data.Model.Version, VersionForDisplay>();
         }
 
         private static string CreateUsername(string firstName, string lastName)

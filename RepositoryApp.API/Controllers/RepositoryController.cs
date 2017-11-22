@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using RepositoryApp.Data.Dto;
@@ -14,11 +14,9 @@ using RepositoryApp.Service.Services.Interfaces;
 namespace RepositoryApp.API.Controllers
 {
     [Authorize]
-    [Route("api/users/{userId}/repositories")]
+    [Route("api/users/{userId}/repositories/")]
     public class RepositoryController : Controller
     {
-        private readonly IConfiguration _configuration;
-        private readonly Guid _currentUserId;
         private readonly IDirectoryService _directoryService;
         private readonly IMapper _mapper;
         private readonly IRepositoryService _repositoryService;
@@ -27,22 +25,19 @@ namespace RepositoryApp.API.Controllers
         public RepositoryController(IRepositoryService repositoryService,
             IDirectoryService directoryService,
             IMapper mapper,
-            IHttpContextAccessor accessor,
-            IUserService userService,
-            IConfiguration configuration)
+            IUserService userService)
         {
             _repositoryService = repositoryService;
             _directoryService = directoryService;
             _mapper = mapper;
-            _currentUserId = accessor.CurrentUser();
             _userService = userService;
-            _configuration = configuration;
         }
 
         [HttpGet]
         public async Task<IActionResult> GetRepositoriesForUser(Guid userId)
         {
-            if (_currentUserId != userId)
+            var currentUserId = Guid.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            if (currentUserId != userId)
                 return Unauthorized();
             if (!await _userService.UserExist(userId))
                 return BadRequest("User not found");
@@ -55,7 +50,8 @@ namespace RepositoryApp.API.Controllers
         [HttpGet("{repositoryId}", Name = "GetRepository")]
         public async Task<IActionResult> GetRepositories(Guid userId, Guid repositoryId)
         {
-            if (_currentUserId != userId)
+            var currentUserId = Guid.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            if (currentUserId != userId)
                 return Unauthorized();
 
             if (!await _userService.UserExist(userId))
@@ -73,30 +69,30 @@ namespace RepositoryApp.API.Controllers
             if (!ModelState.IsValid)
                 return new UnprocessableEntityObjectRestult(ModelState);
 
-            if (_currentUserId != userId)
+            var currentUserId = Guid.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            if (currentUserId != userId)
                 return Unauthorized();
 
             var user = await _userService.GetUser(userId);
             if (user == null)
                 return BadRequest("User not found");
 
-            var random = string.Empty;
             var repository = _mapper.Map<Repository>(creationDto);
-            repository.UniqueName = $"{repository.Name.Replace(' ', '_')}_{random.RandomString(10)}";
-
+            repository.Path = $"{user.Path}{repository.UniqueName}\\";
             user.Repositories = new List<Repository>
             {
                 repository
             };
             if (!await _repositoryService.SaveAsync())
                 return StatusCode(500, "Fault while save in database");
-            var path = $"{_configuration["Paths:DefaultPath"]}\\{user.UniqueName}\\{repository.UniqueName}";
-            if (_directoryService.DirectoryExist(path))
+
+
+            if (_directoryService.DirectoryExist(repository.Path))
                 return StatusCode(500, "Something goes wrong");
 
             try
             {
-                await _directoryService.CreateDirectory(path);
+                await _directoryService.CreateDirectory(repository.Path);
             }
             catch (Exception e)
             {
@@ -111,22 +107,19 @@ namespace RepositoryApp.API.Controllers
         [HttpDelete("{repositoryId}")]
         public async Task<IActionResult> DeleteRepository(Guid userId, Guid repositoryId)
         {
-            if (_currentUserId != userId)
+            var currentUserId = Guid.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            if (currentUserId != userId)
                 return Unauthorized();
 
             var repository = await _repositoryService.GetRepositoryForUser(userId, repositoryId);
             if (repository == null)
-            {
                 return BadRequest($"Repository {repositoryId} doesn't exist");
-            }
-            var user = await _userService.GetUser(userId);
-            var path = $"{_configuration["Paths:DefaultPath"]}\\{user.UniqueName}\\{repository.UniqueName}";
 
             await _repositoryService.RemoveRepository(repository);
 
             try
             {
-                await _directoryService.RemoveDirectory(path);
+                await _directoryService.RemoveDirectory(repository.Path);
             }
             catch (Exception e)
             {
@@ -134,13 +127,9 @@ namespace RepositoryApp.API.Controllers
             }
 
             if (!await _repositoryService.SaveAsync())
-            {
                 return StatusCode(500, "Fail while saving database");
-            }
 
             return NoContent();
         }
-
-
     }
 }

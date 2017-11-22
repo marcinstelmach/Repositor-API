@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.Text;
 using Microsoft.AspNetCore.Http;
 
 namespace RepositoryApp.Service.Helpers
@@ -18,7 +16,6 @@ namespace RepositoryApp.Service.Helpers
             {
                 throw new Exception("Guid convertin " + e.Message);
             }
-
         }
     }
 }
