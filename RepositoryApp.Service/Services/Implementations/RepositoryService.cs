@@ -49,7 +49,10 @@ namespace RepositoryApp.Service.Services.Implementations
         public async Task<IList<Repository>> GetRepositoriesForUser(Guid userId)
         {
             var repository =
-                await _dbContext.Repositories.Where(s => s.UserId == userId).ToListAsync();
+                await _dbContext.Repositories
+                .Include(s => s.Versions)
+                .Where(s => s.UserId == userId)
+                .ToListAsync();
             return repository;
         }
 

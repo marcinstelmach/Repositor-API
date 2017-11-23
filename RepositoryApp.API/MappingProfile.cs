@@ -14,7 +14,10 @@ namespace RepositoryApp.API
         public MappingProfile()
         {
             var random = string.Empty;
-            CreateMap<Repository, RepositoryForDisplayDto>();
+            CreateMap<Repository, RepositoryForDisplayDto>()
+                .ForMember(dest => dest.CountOfVersion,
+                    opt => opt.MapFrom(
+                        src => src.Versions.Count));
 
             CreateMap<UserForCreationDto, User>()
                 .ForMember(dest => dest.UniqueName,
