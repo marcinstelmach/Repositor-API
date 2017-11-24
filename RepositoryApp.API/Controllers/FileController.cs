@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using RepositoryApp.Data.Dto;
+using RepositoryApp.Service.Helpers;
 using RepositoryApp.Service.Services.Interfaces;
 using File = RepositoryApp.Data.Model.File;
 
@@ -96,9 +97,11 @@ namespace RepositoryApp.API.Controllers
             {
                 return BadRequest();
             }
-            
 
-            var path = Path.Combine(version.Path, file.FileName);
+
+            var uniqueName = CreateUniqueName(file.FileName);
+
+            var path = Path.Combine(version.Path, uniqueName);
             using (var stream = new FileStream(path, FileMode.Create))
             {
                 await file.CopyToAsync(stream);
@@ -106,7 +109,8 @@ namespace RepositoryApp.API.Controllers
 
             var fileForCreate = new FileForCreation
             {
-                Name = file.FileName
+                Name = file.FileName,
+                UniqueName = uniqueName
             };
 
             var fileToAdd = _mapper.Map<Data.Model.File>(fileForCreate);
@@ -146,7 +150,14 @@ namespace RepositoryApp.API.Controllers
                 await stream.CopyToAsync(memory);
             }
             memory.Position = 0;
-            return File(memory, file.ContentType, Path.GetFileName(file.Path));
+            return File(memory, file.ContentType, file.Name);
+        }
+        private string CreateUniqueName(string fileName)
+        {
+            var rand = string.Empty;
+            var extension = fileName.Substring(fileName.LastIndexOf('.') + 1);
+            var uniqueName = $"{fileName.Substring(0, fileName.LastIndexOf('.'))}_{rand.RandomString(10)}.{extension}";
+            return uniqueName;
         }
     }
 }
