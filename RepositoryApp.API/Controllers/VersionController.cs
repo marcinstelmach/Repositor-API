@@ -72,8 +72,7 @@ namespace RepositoryApp.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddVersion(Guid userId, Guid repositoryId,
-            [FromBody] VersionForCreation versionDto)
+        public async Task<IActionResult> AddVersion(Guid userId, Guid repositoryId, [FromBody] VersionForCreation versionDto)
         {
             if (!ModelState.IsValid)
             {

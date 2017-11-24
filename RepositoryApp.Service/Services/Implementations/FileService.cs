@@ -27,7 +27,7 @@ namespace RepositoryApp.Service.Services.Implementations
 
         public async Task<IList<File>> GetFilesForVersionAsync(Guid versionId)
         {
-            var files = await _dbContext.Files.Where(f => f.Id == versionId).ToListAsync();
+            var files = await _dbContext.Files.Where(f => f.VersionId == versionId).ToListAsync();
             return files;
         }
 

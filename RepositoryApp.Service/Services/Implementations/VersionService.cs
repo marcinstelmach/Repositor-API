@@ -27,7 +27,9 @@ namespace RepositoryApp.Service.Services.Implementations
 
         public async Task<IList<Version>> GetVersionsForUserAsync(Guid repositoryId)
         {
-            var versions = await _dbContext.Versions.Where(s => s.RepositoryId == repositoryId).ToListAsync();
+            var versions = await _dbContext.Versions.Where(s => s.RepositoryId == repositoryId)
+                .Include(s => s.Files)
+                .ToListAsync();
             return versions;
         }
 

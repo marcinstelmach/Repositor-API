@@ -34,20 +34,19 @@ namespace RepositoryApp.API
             CreateMap<RepositoryForCreationDto, Repository>()
                 .ForMember(dest => dest.CreationDateTime,
                     opt => opt.UseValue(DateTime.Now))
-                .ForMember(dest => dest.ModifyDateTime,
-                    opt => opt.UseValue(DateTime.Now))
                     .ForMember(dest => dest.UniqueName,
                     opt => opt.MapFrom(src => $"{src.Name.Replace(' ', '_')}_{random.RandomString(10)}"));
 
             CreateMap<VersionForCreation, Data.Model.Version>()
                 .ForMember(dest => dest.CreationDateTime,
                     opt => opt.UseValue(DateTime.Now))
-                .ForMember(dest => dest.ModifDateTime,
-                    opt => opt.UseValue(DateTime.Now))
                 .ForMember(dest => dest.UniqueName,
                     opt => opt.MapFrom(src => $"{src.Name.Replace(' ', '_')}_{random.RandomString(10)}"));
 
-            CreateMap<Data.Model.Version, VersionForDisplay>();
+            CreateMap<Data.Model.Version, VersionForDisplay>()
+                .ForMember(dest => dest.CountOfFiles,
+                    opt => opt.MapFrom(
+                        src => src.Files.Count));
 
             CreateMap<FileForCreation, File>()
                 .ForMember(dest => dest.CreationDateTime,

@@ -14,8 +14,6 @@ namespace RepositoryApp.Data.Model
         public string UniqueName { get; set; }
         public string Description { get; set; }
         public DateTime CreationDateTime { get; set; }
-        public DateTime ModifDateTime { get; set; }
-
         [ForeignKey("Repository")]
         public Guid RepositoryId { get; set; }
 

@@ -42,7 +42,6 @@ namespace RepositoryApp.Service.Providers
                             Name = "MyRepository1",
                             UniqueName = $"MyRepository1_{random.RandomString(10)}",
                             CreationDateTime = DateTime.Now,
-                            ModifyDateTime = DateTime.Now,
                             Path = "",
                             Versions = new List<Version>
                             {
@@ -53,7 +52,6 @@ namespace RepositoryApp.Service.Providers
                                     UniqueName = $"1_{random.RandomString(10)}",
                                     Description = "For Test",
                                     CreationDateTime = DateTime.Now,
-                                    ModifDateTime = DateTime.Now,
                                     Path = "",
                                     Files = new List<File>
                                     {
@@ -84,7 +82,6 @@ namespace RepositoryApp.Service.Providers
                                     UniqueName = $"2_{random.RandomString(10)}",
                                     Description = "For Test",
                                     CreationDateTime = DateTime.Now,
-                                    ModifDateTime = DateTime.Now,
                                     Path = "",
                                     Files = new List<File>
                                     {
@@ -125,7 +122,6 @@ namespace RepositoryApp.Service.Providers
                             Name = "MyRepository2",
                             UniqueName = $"MyRepository2_{random.RandomString(10)}",
                             CreationDateTime = DateTime.Now,
-                            ModifyDateTime = DateTime.Now,
                             Path = "",
                             Versions = new List<Version>
                             {
@@ -136,7 +132,6 @@ namespace RepositoryApp.Service.Providers
                                     UniqueName = $"1_{random.RandomString(10)}",
                                     Description = "For Test",
                                     CreationDateTime = DateTime.Now,
-                                    ModifDateTime = DateTime.Now,
                                     Path = "",
                                     Files = new List<File>
                                     {
@@ -167,7 +162,6 @@ namespace RepositoryApp.Service.Providers
                                     UniqueName = $"2_{random.RandomString(10)}",
                                     Description = "For Test",
                                     CreationDateTime = DateTime.Now,
-                                    ModifDateTime = DateTime.Now,
                                     Path = "",
                                     Files = new List<File>
                                     {

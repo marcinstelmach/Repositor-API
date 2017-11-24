@@ -13,8 +13,6 @@ namespace RepositoryApp.Data.Model
         public string Name { get; set; }
         public string UniqueName { get; set; }
         public DateTime CreationDateTime { get; set; }
-        public DateTime ModifyDateTime { get; set; }
-
         [ForeignKey("User")]
         public Guid UserId { get; set; }
 

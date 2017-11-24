@@ -13,7 +13,7 @@ namespace RepositoryApp.Data.Dto
         public string Name { get; set; }
         public string Description { get; set; }
         public DateTime CreationDateTime { get; set; }
-        public DateTime ModifDateTime { get; set; }
+        public int CountOfFiles { get; set; }
         public Guid RepositoryId { get; set; }
     }
 }
