@@ -33,6 +33,7 @@ namespace RepositoryApp.Service.Services.Implementations
 
         public async Task AddFileAsync(File file)
         {
+            file.CreationDateTime = DateTime.Now;
             await _dbContext.AddAsync(file);
         }
 
