@@ -6,6 +6,7 @@ using AutoMapper;
 using RepositoryApp.Data.Dto;
 using RepositoryApp.Data.Model;
 using RepositoryApp.Service.Helpers;
+using Version = RepositoryApp.Data.Model.Version;
 
 namespace RepositoryApp.API
 {
@@ -14,45 +15,55 @@ namespace RepositoryApp.API
         public MappingProfile()
         {
             var random = string.Empty;
-            CreateMap<Repository, RepositoryForDisplayDto>()
-                .ForMember(dest => dest.CountOfVersion,
-                    opt => opt.MapFrom(
-                        src => src.Versions.Count));
-
             CreateMap<UserForCreationDto, User>()
                 .ForMember(dest => dest.UniqueName,
                     opt => opt.MapFrom(
                         src => $"{CreateUsername(src.FirstName, src.LastName)}_{random.RandomString(10)}"));
 
-
             CreateMap<User, UserForDisplayDto>()
                 .ForMember(dest => dest.CreatedDateTime,
-                    opt => opt.MapFrom(src => src.CreationDateTime.ToShortDateString()))
+                    opt => opt.MapFrom(src => src.CreationDateTime.ToString("G")))
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src => $"{src.FirstName} {src.LastName}"));
             CreateMap<UserForLoginDto, User>();
 
             CreateMap<RepositoryForCreationDto, Repository>()
                 .ForMember(dest => dest.CreationDateTime,
                     opt => opt.UseValue(DateTime.Now))
-                    .ForMember(dest => dest.UniqueName,
-                    opt => opt.MapFrom(src => $"{src.Name.Replace(' ', '_')}_{random.RandomString(10)}"));
-
-            CreateMap<VersionForCreation, Data.Model.Version>()
-                .ForMember(dest => dest.CreationDateTime,
-                    opt => opt.UseValue(DateTime.Now))
                 .ForMember(dest => dest.UniqueName,
                     opt => opt.MapFrom(src => $"{src.Name.Replace(' ', '_')}_{random.RandomString(10)}"));
 
-            CreateMap<Data.Model.Version, VersionForDisplay>()
+            CreateMap<Repository, RepositoryForDisplayDto>()
+                .ForMember(dest => dest.CountOfVersion,
+                    opt => opt.MapFrom(
+                        src => src.Versions.Count))
+                .ForMember(dest => dest.CreationDateTime,
+                    opt => opt.MapFrom(
+                        src => src.CreationDateTime.ToString("G")));
+
+            CreateMap<VersionForCreation, Version>()
+                .ForMember(dest => dest.CreationDateTime,
+                    opt => opt.UseValue(DateTime.Now))
+                .ForMember(dest => dest.UniqueName,
+                    opt => opt.MapFrom(src => $"{src.Name.Replace(' ', '_')}_{random.RandomString(10)}"))
+                .ForMember(dest => dest.ProductionVersion,
+                    opt => opt.UseValue(false));
+
+            CreateMap<Version, VersionForDisplay>()
                 .ForMember(dest => dest.CountOfFiles,
                     opt => opt.MapFrom(
-                        src => src.Files.Count));
+                        src => src.Files.Count))
+                .ForMember(dest => dest.CreationDateTime,
+                    opt => opt.MapFrom(
+                        src => src.CreationDateTime.ToString("G")));
 
             CreateMap<FileForCreation, File>()
                 .ForMember(dest => dest.CreationDateTime,
                     opt => opt.UseValue(DateTime.Now));
-            CreateMap<File, FileForDisplay>();
-            CreateMap<FileForCreation, File>();
+
+            CreateMap<File, FileForDisplay>()
+                .ForMember(dest => dest.CreationDateTime,
+                    opt => opt.MapFrom(
+                        src => src.CreationDateTime.ToString("G")));
         }
 
         private static string CreateUsername(string firstName, string lastName)

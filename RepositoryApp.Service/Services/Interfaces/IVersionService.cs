@@ -13,5 +13,6 @@ namespace RepositoryApp.Service.Services.Interfaces
         Task AddVersionAsync(Version version);
         void DeleteVersion(Version version);
         Task<bool> SaveChangesAsync();
+        void ChangeVersionStatusAsync(Version version);
     }
 }

@@ -47,5 +47,11 @@ namespace RepositoryApp.Service.Services.Implementations
         {
             return await _dbContext.SaveChangesAsync() >= 0;
         }
+
+        public void ChangeVersionStatusAsync(Version version)
+        {
+            version.ProductionVersion = !version.ProductionVersion;
+            _dbContext.Versions.Update(version);
+        }
     }
 }

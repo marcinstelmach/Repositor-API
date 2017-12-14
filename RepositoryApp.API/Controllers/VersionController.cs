@@ -152,5 +152,29 @@ namespace RepositoryApp.API.Controllers
             }
             return NoContent();
         }
+
+        [HttpPut("{versionId}")]
+        public async Task<IActionResult> ChangeVersionStatus(Guid userId, Guid repositoryId, Guid versionId)
+        {
+            var currentUserId = Guid.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            if (userId != currentUserId)
+            {
+                return Unauthorized();
+            }
+
+            var version = await _versionService.GetVersionByIdAsync(versionId);
+            if (version == null)
+            {
+                return BadRequest();
+            }
+
+            _versionService.ChangeVersionStatusAsync(version);
+            if (!await _versionService.SaveChangesAsync())
+            {
+                return StatusCode(500, "failed while saving in database");
+            }
+            var versionDto = _mapper.Map<VersionForDisplay>(version);
+            return Ok(versionDto);
+        }
     }
 }
