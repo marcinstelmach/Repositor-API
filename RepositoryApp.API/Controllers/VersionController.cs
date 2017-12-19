@@ -91,7 +91,7 @@ namespace RepositoryApp.API.Controllers
             }
 
             var version = _mapper.Map<Version>(versionDto);
-            version.Path = $"{repository.Path}\\{version.UniqueName}\\";
+            version.Path = $"{repository.Path}{version.UniqueName}\\";
             repository.Versions = new List<Version>
             {
                 version
@@ -175,6 +175,52 @@ namespace RepositoryApp.API.Controllers
             }
             var versionDto = _mapper.Map<VersionForDisplay>(version);
             return Ok(versionDto);
+        }
+
+        [HttpPost("{versionId}")]
+        public async Task<IActionResult> AddOverVersion(Guid userId, Guid repositoryId, Guid versionId, [FromBody] VersionForCreation versionForCreation)
+        {
+            var currentUserId = Guid.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            if (userId != currentUserId)
+            {
+                return Unauthorized();
+            }
+            var repository = await _repositoryService.GetRepositoryForUser(userId, repositoryId);
+            var baseVersion = await _versionService.GetVersionWithFilesAsync(versionId);
+            if (baseVersion == null)
+            {
+                return BadRequest();
+            }
+
+            var version = _mapper.Map<Version>(versionForCreation);
+            version.Path = $"{repository.Path}\\{version.UniqueName}\\";
+            version.Files = _versionService.PrepareFiles(baseVersion.Files, version.Path);
+
+            repository.Versions.Add(version);
+
+            if (! await _versionService.SaveChangesAsync())
+            {
+                return StatusCode(500, "Error while saving");
+            }
+            if (_directoryService.DirectoryExist(version.Path))
+                return StatusCode(500, "Something goes wrong");
+
+            try
+            {
+                await _directoryService.CreateDirectory(version.Path);
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, "Something goes wrong, " + e.Message);
+            }
+
+            var fileNames = version.Files.Select(s => s.UniqueName).ToList();
+
+            _directoryService.MoveFiles(baseVersion.Path, version.Path, fileNames);
+
+            var versionForDisplay = _mapper.Map<VersionForDisplay>(version);
+            return CreatedAtRoute("GetVersion",
+                new { userId = userId, repositoryId = repositoryId, versionId = version.Id }, versionForDisplay);
         }
     }
 }

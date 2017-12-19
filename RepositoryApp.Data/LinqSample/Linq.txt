@@ -1,0 +1,41 @@
+﻿var db = new CarDbContext();
+            db.Database.Log = Console.WriteLine;
+            var firstTimer = Stopwatch.StartNew();
+            var toMostEfInManufacture = db.Manufacturers
+                .GroupJoin(db.Cars, m => m.Name, c => c.Manufacturer, (m, g) => new
+                {
+                    Manufacturer = m,
+                    CarGroup = g.OrderByDescending(s => s.Combined).Take(2)
+                });
+            firstTimer.Stop();
+
+            var secondTimer = Stopwatch.StartNew();
+            var toMostEfiOneTable = db.Cars.GroupBy(s => s.Manufacturer)
+                .Select(s => new
+                {
+                    Name = s.Key,
+                    Cars = s.OrderByDescending(x => x.Combined).Take(2)
+                });
+            secondTimer.Stop();
+            foreach (var manu in toMostEfInManufacture)
+            {
+                Console.WriteLine($"{manu.Manufacturer.Name}: {manu.Manufacturer.Headquarters}");
+                foreach (var car in manu.CarGroup)
+                {
+                    Console.WriteLine($"\t{car.Name}: {car.Combined}");
+                }
+
+            }
+            
+
+            foreach (var item in toMostEfiOneTable)
+            {
+                Console.WriteLine($"{item.Name}");
+                foreach (var car in item.Cars)
+                {
+                    Console.WriteLine($"\t{car.Name}: {car.Combined}");
+                }
+
+            }
+            Console.WriteLine($"First Took {firstTimer.Elapsed.TotalMilliseconds}");
+            Console.WriteLine($"Second Took {secondTimer.Elapsed.TotalMilliseconds}");

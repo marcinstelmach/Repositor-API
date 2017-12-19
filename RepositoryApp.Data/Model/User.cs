@@ -17,6 +17,6 @@ namespace RepositoryApp.Data.Model
         public DateTime CreationDateTime { get; set; }
         public string UniqueName { get; set; }
         public string Path { get; set; }
-        public IList<Repository> Repositories { get; set; }
+        public List<Repository> Repositories { get; set; }
     }
 }

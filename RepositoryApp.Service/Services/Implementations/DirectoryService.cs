@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 using RepositoryApp.Service.Services.Interfaces;
 
@@ -28,6 +29,19 @@ namespace RepositoryApp.Service.Services.Implementations
             var newPath = path.Substring(0, path.LastIndexOf('\\')) + path.Substring(path.LastIndexOf('\\')) + newName;
             Directory.Move(path, newPath);
             await Task.CompletedTask;
+        }
+
+        public async void MoveFiles(string sourcePath, string destinationPath, List<string> fileNames)
+        {
+            if (!DirectoryExist(destinationPath))
+            {
+                await CreateDirectory(destinationPath);
+            }
+
+            foreach (var fileName in fileNames)
+            {
+                File.Copy(Path.Combine(sourcePath, fileName), Path.Combine(destinationPath, fileName), true);    
+            }
         }
     }
 }

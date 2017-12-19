@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace RepositoryApp.Service.Services.Interfaces
 {
@@ -8,5 +9,6 @@ namespace RepositoryApp.Service.Services.Interfaces
         bool DirectoryExist(string path);
         Task RemoveDirectory(string path);
         Task RenameDirectory(string path, string newName);
+        void MoveFiles(string sourcePath, string destinationPath, List<string> fileNames);
     }
 }

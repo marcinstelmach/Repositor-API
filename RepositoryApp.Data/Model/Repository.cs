@@ -18,6 +18,6 @@ namespace RepositoryApp.Data.Model
 
         public string Path { get; set; }
         public User User { get; set; }
-        public IList<Version> Versions { get; set; }
+        public List<Version> Versions { get; set; }
     }
 }

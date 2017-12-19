@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using RepositoryApp.Data.DAL;
+using RepositoryApp.Data.Model;
 using RepositoryApp.Service.Services.Interfaces;
 using Version = RepositoryApp.Data.Model.Version;
 
@@ -52,6 +53,27 @@ namespace RepositoryApp.Service.Services.Implementations
         {
             version.ProductionVersion = !version.ProductionVersion;
             _dbContext.Versions.Update(version);
+        }
+
+        public List<File> PrepareFiles(List<File> files, string path)
+        {
+            var preparedFiles = files.Select(file => new File
+                {
+                    Name = file.Name,
+                    ContentType = file.ContentType,
+                    CreationDateTime = DateTime.Now,
+                    UniqueName = file.UniqueName,
+                    Path = path
+                })
+                .ToList();
+            return preparedFiles;
+        }
+
+        public async Task<Version> GetVersionWithFilesAsync(Guid versionId)
+        {
+            var version = await _dbContext.Versions.Where(s => s.Id == versionId).Include(f => f.Files)
+                .FirstOrDefaultAsync();
+            return version;
         }
     }
 }
