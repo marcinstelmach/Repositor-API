@@ -10,5 +10,6 @@ namespace RepositoryApp.Service.Services.Interfaces
         Task RemoveDirectory(string path);
         Task RenameDirectory(string path, string newName);
         void MoveFiles(string sourcePath, string destinationPath, List<string> fileNames);
+        void RemoveFile(string path);
     }
 }

@@ -59,7 +59,6 @@ namespace RepositoryApp.Service.Providers
                                         {
                                             Id = Guid.NewGuid(),
                                             Name = "FileOne",
-                                            UniqueName = $"FileOne_{random.RandomString(10)}",
                                             CreationDateTime = DateTime.Now,
                                             Path = "",
                                             ContentType = ""

@@ -62,7 +62,7 @@ namespace RepositoryApp.API.Controllers
                 return BadRequest();
             }
 
-            var version = await _versionService.GetVersionByIdAsync(versionId);
+            var version = await _versionService.GetVersionWithFilesAsync(versionId);
             if (version == null)
             {
                 return BadRequest();
@@ -214,7 +214,7 @@ namespace RepositoryApp.API.Controllers
                 return StatusCode(500, "Something goes wrong, " + e.Message);
             }
 
-            var fileNames = version.Files.Select(s => s.UniqueName).ToList();
+            var fileNames = version.Files.Select(s => s.Name).ToList();
 
             _directoryService.MoveFiles(baseVersion.Path, version.Path, fileNames);
 

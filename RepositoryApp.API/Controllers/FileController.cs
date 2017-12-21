@@ -21,12 +21,14 @@ namespace RepositoryApp.API.Controllers
         private readonly IFileService _fileService;
         private readonly IMapper _mapper;
         private readonly IVersionService _versionService;
+        private readonly IDirectoryService _directoryService;
 
-        public FileController(IFileService fileService, IMapper mapper, IVersionService versionService)
+        public FileController(IFileService fileService, IMapper mapper, IVersionService versionService, IDirectoryService directoryService)
         {
             _fileService = fileService;
             _mapper = mapper;
             _versionService = versionService;
+            _directoryService = directoryService;
         }
 
         [HttpGet]
@@ -76,7 +78,15 @@ namespace RepositoryApp.API.Controllers
 
             _fileService.DeleteFile(file);
             if (!await _fileService.SaveChangesAsync())
-                return StatusCode(500, "Fault while saving");
+                return StatusCode(500, "Fault while deleting");
+            try
+            {
+                _directoryService.RemoveFile(file.Path);
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, "Fault while deleting, " + e.Message);
+            }
             return NoContent();
         }
 
@@ -87,7 +97,7 @@ namespace RepositoryApp.API.Controllers
             if (currentUserId != userId)
                 return Unauthorized();
 
-            var version = await _versionService.GetVersionByIdAsync(versionId);
+            var version = await _versionService.GetVersionWithFilesAsync(versionId);
             if (version == null)
             {
                 return BadRequest();
@@ -97,11 +107,9 @@ namespace RepositoryApp.API.Controllers
             {
                 return BadRequest();
             }
+            _fileService.RemoveDuplicatedFile(version.Files, file.FileName);
 
-
-            var uniqueName = CreateUniqueName(file.FileName);
-
-            var path = Path.Combine(version.Path, uniqueName);
+            var path = Path.Combine(version.Path, file.FileName);
             using (var stream = new FileStream(path, FileMode.Create))
             {
                 await file.CopyToAsync(stream);
@@ -110,7 +118,6 @@ namespace RepositoryApp.API.Controllers
             var fileForCreate = new FileForCreation
             {
                 Name = file.FileName,
-                UniqueName = uniqueName
             };
 
             var fileToAdd = _mapper.Map<Data.Model.File>(fileForCreate);

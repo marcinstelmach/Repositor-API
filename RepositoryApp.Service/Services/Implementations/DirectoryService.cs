@@ -43,5 +43,10 @@ namespace RepositoryApp.Service.Services.Implementations
                 File.Copy(Path.Combine(sourcePath, fileName), Path.Combine(destinationPath, fileName), true);    
             }
         }
+
+        public void RemoveFile(string path)
+        {
+            File.Delete(path);
+        }
     }
 }

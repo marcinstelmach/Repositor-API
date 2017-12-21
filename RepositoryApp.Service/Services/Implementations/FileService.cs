@@ -13,10 +13,12 @@ namespace RepositoryApp.Service.Services.Implementations
     public class FileService : IFileService
     {
         private readonly ApplicationDbContext _dbContext;
+        private readonly IDirectoryService _directoryService;
 
-        public FileService(ApplicationDbContext dbContext)
+        public FileService(ApplicationDbContext dbContext, IDirectoryService directoryService)
         {
             _dbContext = dbContext;
+            _directoryService = directoryService;
         }
 
         public async Task<File> GetFileByIdAsync(Guid fileId)
@@ -45,6 +47,18 @@ namespace RepositoryApp.Service.Services.Implementations
         public async Task<bool> SaveChangesAsync()
         {
             return await _dbContext.SaveChangesAsync() >= 0;
+        }
+
+        public void RemoveDuplicatedFile(List<File> files, string fileName)
+        {
+            var file = files.FirstOrDefault(s => s.Name == fileName);
+            if (file == null)
+            {
+                return;
+            }
+
+            DeleteFile(file);
+            _directoryService.RemoveFile(file.Path);
         }
     }
 }

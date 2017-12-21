@@ -62,7 +62,6 @@ namespace RepositoryApp.Service.Services.Implementations
                     Name = file.Name,
                     ContentType = file.ContentType,
                     CreationDateTime = DateTime.Now,
-                    UniqueName = file.UniqueName,
                     Path = path
                 })
                 .ToList();
