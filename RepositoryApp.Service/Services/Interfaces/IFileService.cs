@@ -13,6 +13,6 @@ namespace RepositoryApp.Service.Services.Interfaces
         Task AddFileAsync(File file);
         void DeleteFile(File file);
         Task<bool> SaveChangesAsync();
-        void RemoveDuplicatedFile(List<File> files, string fileName);
+        Task<bool> RemoveDuplicatedFile(List<File> files, string fileName);
     }
 }

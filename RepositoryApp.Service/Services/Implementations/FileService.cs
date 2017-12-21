@@ -49,16 +49,19 @@ namespace RepositoryApp.Service.Services.Implementations
             return await _dbContext.SaveChangesAsync() >= 0;
         }
 
-        public void RemoveDuplicatedFile(List<File> files, string fileName)
+        public async Task<bool> RemoveDuplicatedFile(List<File> files, string fileName)
         {
             var file = files.FirstOrDefault(s => s.Name == fileName);
             if (file == null)
             {
-                return;
+                return false;
             }
 
             DeleteFile(file);
+            await SaveChangesAsync();
+
             _directoryService.RemoveFile(file.Path);
+            return true;
         }
     }
 }

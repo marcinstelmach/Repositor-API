@@ -12,6 +12,7 @@ namespace RepositoryApp.Data.Model
         public DateTime CreationDateTime { get; set; }
         public string ContentType { get; set; }
         public string Path { get; set; }
+        public bool Overrided { get; set; }
         [ForeignKey("Version")]
         public Guid VersionId { get; set; }
         public Version Version { get; set; }

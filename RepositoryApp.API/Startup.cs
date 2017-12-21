@@ -92,7 +92,7 @@ namespace RepositoryApp.API
             app.UseMvc();
 
 
-            //DbInitializeProvider.InitializeWithDefaults(dbContext);
+            DbInitializeProvider.InitializeWithDefaults(dbContext);
         }
     }
 }

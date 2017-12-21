@@ -107,7 +107,16 @@ namespace RepositoryApp.API.Controllers
             {
                 return BadRequest();
             }
-            _fileService.RemoveDuplicatedFile(version.Files, file.FileName);
+
+            var fileForCreate = new FileForCreation
+            {
+                Name = file.FileName,
+            };
+            var fileToAdd = _mapper.Map<Data.Model.File>(fileForCreate);
+            if (await _fileService.RemoveDuplicatedFile(version.Files, file.FileName))
+            {
+                fileToAdd.Overrided = true;
+            }
 
             var path = Path.Combine(version.Path, file.FileName);
             using (var stream = new FileStream(path, FileMode.Create))
@@ -115,19 +124,10 @@ namespace RepositoryApp.API.Controllers
                 await file.CopyToAsync(stream);
             }
 
-            var fileForCreate = new FileForCreation
-            {
-                Name = file.FileName,
-            };
-
-            var fileToAdd = _mapper.Map<Data.Model.File>(fileForCreate);
             fileToAdd.Path = path;
             fileToAdd.ContentType = file.ContentType;
 
-            version.Files = new List<File>
-            {
-                fileToAdd
-            };
+            version.Files.Add(fileToAdd);
 
             if (! await _fileService.SaveChangesAsync())
             {

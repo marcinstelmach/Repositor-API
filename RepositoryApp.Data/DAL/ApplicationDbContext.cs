@@ -24,7 +24,7 @@ namespace RepositoryApp.Data.DAL
             builder.Entity<User>().ToTable("User").Property(p => p.Id).ValueGeneratedOnAdd();
             builder.Entity<Repository>().ToTable("Repository");
             builder.Entity<Version>().ToTable("Version");
-            builder.Entity<File>().ToTable("File");
+            builder.Entity<File>().ToTable("File").Property(s => s.Overrided).HasDefaultValue(false);
         }
     }
 }
