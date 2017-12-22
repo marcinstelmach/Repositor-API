@@ -7,11 +7,11 @@ namespace RepositoryApp.Service.Services.Interfaces
 {
     public interface IRepositoryService
     {
-        Task CreateRepositoryForUser(Guid userId, Repository repository);
-        Task<bool> RepositoryExist(Guid repositoryId);
-        Task RemoveRepository(Repository repository);
-        Task<Repository> GetRepositoryForUser(Guid userId, Guid repositoryId);
-        Task<IList<Repository>> GetRepositoriesForUser(Guid userId);
-        Task<bool> SaveAsync();
+        Task CreateRepositoryAsync(Guid userId, Repository repository);
+        Task<bool> RepositoryExistAsync(Guid repositoryId);
+        Task RemoveRepositoryAsync(Repository repository);
+        Task<Repository> GetRepositoryAsync(Guid userId, Guid repositoryId);
+        Task<IList<Repository>> GetRepositoriesAsync(Guid userId);
+        Task<bool> SaveChangesAsync();
     }
 }

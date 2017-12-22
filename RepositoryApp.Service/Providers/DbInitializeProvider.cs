@@ -62,11 +62,11 @@ namespace RepositoryApp.Service.Providers
                                             CreationDateTime = DateTime.Now,
                                             Path = "",
                                             ContentType = ""
-                                        }                                     
+                                        }
                                     }
                                 }
                             }
-                        } 
+                        }
                     }
                 }
             };

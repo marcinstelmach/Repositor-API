@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
 using RepositoryApp.Data.Dto;
 using RepositoryApp.Data.Model;
 using RepositoryApp.Service.Helpers;
@@ -39,10 +38,10 @@ namespace RepositoryApp.API.Controllers
             var currentUserId = Guid.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             if (currentUserId != userId)
                 return Unauthorized();
-            if (!await _userService.UserExist(userId))
+            if (!await _userService.UserExistAsync(userId))
                 return BadRequest("User not found");
 
-            var repositories = await _repositoryService.GetRepositoriesForUser(userId);
+            var repositories = await _repositoryService.GetRepositoriesAsync(userId);
             var repositoryForDisplay = _mapper.Map<IList<RepositoryForDisplayDto>>(repositories);
             return Ok(repositoryForDisplay);
         }
@@ -54,14 +53,12 @@ namespace RepositoryApp.API.Controllers
             if (currentUserId != userId)
                 return Unauthorized();
 
-            if (!await _userService.UserExist(userId))
+            if (!await _userService.UserExistAsync(userId))
                 return BadRequest("User not found");
 
-            var repository = await _repositoryService.GetRepositoryForUser(userId, repositoryId);
+            var repository = await _repositoryService.GetRepositoryAsync(userId, repositoryId);
             if (repository == null)
-            {
                 return BadRequest();
-            }
             var repositoryForDisplay = _mapper.Map<RepositoryForDisplayDto>(repository);
             return Ok(repositoryForDisplay);
         }
@@ -77,7 +74,7 @@ namespace RepositoryApp.API.Controllers
             if (currentUserId != userId)
                 return Unauthorized();
 
-            var user = await _userService.GetUser(userId);
+            var user = await _userService.GetUserAsync(userId);
             if (user == null)
                 return BadRequest("User not found");
 
@@ -87,7 +84,7 @@ namespace RepositoryApp.API.Controllers
             {
                 repository
             };
-            if (!await _repositoryService.SaveAsync())
+            if (!await _repositoryService.SaveChangesAsync())
                 return StatusCode(500, "Fault while save in database");
 
 
@@ -115,11 +112,11 @@ namespace RepositoryApp.API.Controllers
             if (currentUserId != userId)
                 return Unauthorized();
 
-            var repository = await _repositoryService.GetRepositoryForUser(userId, repositoryId);
+            var repository = await _repositoryService.GetRepositoryAsync(userId, repositoryId);
             if (repository == null)
                 return BadRequest($"Repository {repositoryId} doesn't exist");
 
-            await _repositoryService.RemoveRepository(repository);
+            await _repositoryService.RemoveRepositoryAsync(repository);
 
             try
             {
@@ -130,7 +127,7 @@ namespace RepositoryApp.API.Controllers
                 return StatusCode(500, e.Message);
             }
 
-            if (!await _repositoryService.SaveAsync())
+            if (!await _repositoryService.SaveChangesAsync())
                 return StatusCode(500, "Fail while saving database");
 
             return NoContent();

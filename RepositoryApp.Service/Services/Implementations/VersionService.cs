@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using RepositoryApp.Data.DAL;
@@ -26,9 +25,12 @@ namespace RepositoryApp.Service.Services.Implementations
             return version;
         }
 
-        public async Task<IList<Version>> GetVersionsForUserAsync(Guid repositoryId)
+        public async Task<IList<Version>> GetVersionsWithFilesAsync(Guid repositoryId)
         {
-            var versions = await _dbContext.Versions.Where(s => s.RepositoryId == repositoryId)
+            var versions = await _dbContext.Versions
+                .Where(s => s.RepositoryId == repositoryId)
+                .OrderByDescending(s => s.ProductionVersion)
+                .ThenByDescending(s => s.CreationDateTime)
                 .Include(s => s.Files)
                 .ToListAsync();
             return versions;
@@ -49,7 +51,7 @@ namespace RepositoryApp.Service.Services.Implementations
             return await _dbContext.SaveChangesAsync() >= 0;
         }
 
-        public void ChangeVersionStatusAsync(Version version)
+        public void ChangeVersionStatus(Version version)
         {
             version.ProductionVersion = !version.ProductionVersion;
             _dbContext.Versions.Update(version);
@@ -70,9 +72,19 @@ namespace RepositoryApp.Service.Services.Implementations
 
         public async Task<Version> GetVersionWithFilesAsync(Guid versionId)
         {
-            var version = await _dbContext.Versions.Where(s => s.Id == versionId).Include(f => f.Files)
+            var version = await _dbContext
+                .Versions.Where(s => s.Id == versionId)
+                .Include(f => f.Files)
                 .FirstOrDefaultAsync();
             return version;
+        }
+
+        public async Task SetAllAsNonProductionVersionAsync(Guid repositoryId)
+        {
+            var versions = await GetVersionsWithFilesAsync(repositoryId);
+            foreach (var version in versions)
+                version.ProductionVersion = false;
+            _dbContext.Versions.UpdateRange(versions);
         }
     }
 }

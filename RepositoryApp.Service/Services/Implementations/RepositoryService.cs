@@ -18,7 +18,7 @@ namespace RepositoryApp.Service.Services.Implementations
             _dbContext = dbContext;
         }
 
-        public async Task CreateRepositoryForUser(Guid userId, Repository repository)
+        public async Task CreateRepositoryAsync(Guid userId, Repository repository)
         {
             var user = await _dbContext.Users.FirstOrDefaultAsync(s => s.Id == userId);
             if (user == null)
@@ -27,36 +27,37 @@ namespace RepositoryApp.Service.Services.Implementations
             user.Repositories.Add(repository);
         }
 
-        public async Task<bool> RepositoryExist(Guid repositoryId)
+        public async Task<bool> RepositoryExistAsync(Guid repositoryId)
         {
             var repository = await _dbContext.Repositories.FirstOrDefaultAsync(s => s.Id == repositoryId);
             return repository == null;
         }
 
-        public async Task RemoveRepository(Repository repository)
+        public async Task RemoveRepositoryAsync(Repository repository)
         {
             _dbContext.Repositories.Remove(repository);
             await Task.CompletedTask;
         }
 
-        public async Task<Repository> GetRepositoryForUser(Guid userId, Guid repositoryId)
+        public async Task<Repository> GetRepositoryAsync(Guid userId, Guid repositoryId)
         {
             var repository =
                 await _dbContext.Repositories.FirstOrDefaultAsync(s => s.UserId == userId && s.Id == repositoryId);
             return repository;
         }
 
-        public async Task<IList<Repository>> GetRepositoriesForUser(Guid userId)
+        public async Task<IList<Repository>> GetRepositoriesAsync(Guid userId)
         {
             var repository =
                 await _dbContext.Repositories
-                .Include(s => s.Versions)
-                .Where(s => s.UserId == userId)
-                .ToListAsync();
+                    .Where(s => s.UserId == userId)
+                    .OrderByDescending(s => s.CreationDateTime)
+                    .Include(s => s.Versions)
+                    .ToListAsync();
             return repository;
         }
 
-        public async Task<bool> SaveAsync()
+        public async Task<bool> SaveChangesAsync()
         {
             return await _dbContext.SaveChangesAsync() >= 0;
         }

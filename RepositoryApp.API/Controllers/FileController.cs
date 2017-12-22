@@ -18,12 +18,13 @@ namespace RepositoryApp.API.Controllers
     [Route("api/users/{userId}/repositories/{repositoryId}/versions/{versionId}/files/")]
     public class FileController : Controller
     {
+        private readonly IDirectoryService _directoryService;
         private readonly IFileService _fileService;
         private readonly IMapper _mapper;
         private readonly IVersionService _versionService;
-        private readonly IDirectoryService _directoryService;
 
-        public FileController(IFileService fileService, IMapper mapper, IVersionService versionService, IDirectoryService directoryService)
+        public FileController(IFileService fileService, IMapper mapper, IVersionService versionService,
+            IDirectoryService directoryService)
         {
             _fileService = fileService;
             _mapper = mapper;
@@ -42,7 +43,7 @@ namespace RepositoryApp.API.Controllers
             if (repository == null)
                 return BadRequest();
 
-            var files = await _fileService.GetFilesForVersionAsync(versionId);
+            var files = await _fileService.GetFilesAsync(versionId);
             var filesDto = _mapper.Map<IList<FileForDisplay>>(files);
 
             return Ok(filesDto);
@@ -91,7 +92,8 @@ namespace RepositoryApp.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> UploadFile(Guid userId, Guid repositoryId, Guid versionId, [FromForm] IFormFile file)
+        public async Task<IActionResult> UploadFile(Guid userId, Guid repositoryId, Guid versionId,
+            [FromForm] IFormFile file)
         {
             var currentUserId = Guid.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             if (currentUserId != userId)
@@ -99,24 +101,18 @@ namespace RepositoryApp.API.Controllers
 
             var version = await _versionService.GetVersionWithFilesAsync(versionId);
             if (version == null)
-            {
                 return BadRequest();
-            }
 
             if (file == null || file.Length == 0)
-            {
                 return BadRequest();
-            }
 
             var fileForCreate = new FileForCreation
             {
-                Name = file.FileName,
+                Name = file.FileName
             };
-            var fileToAdd = _mapper.Map<Data.Model.File>(fileForCreate);
-            if (await _fileService.RemoveDuplicatedFile(version.Files, file.FileName))
-            {
+            var fileToAdd = _mapper.Map<File>(fileForCreate);
+            if (await _fileService.RemoveDuplicatedFileAsync(version.Files, file.FileName))
                 fileToAdd.Overrided = true;
-            }
 
             var path = Path.Combine(version.Path, file.FileName);
             using (var stream = new FileStream(path, FileMode.Create))
@@ -129,10 +125,8 @@ namespace RepositoryApp.API.Controllers
 
             version.Files.Add(fileToAdd);
 
-            if (! await _fileService.SaveChangesAsync())
-            {
+            if (!await _fileService.SaveChangesAsync())
                 return StatusCode(500, "Fail while saving");
-            }
             var fileDto = _mapper.Map<FileForDisplay>(fileToAdd);
             return Ok(fileDto);
         }
@@ -147,9 +141,7 @@ namespace RepositoryApp.API.Controllers
 
             var file = await _fileService.GetFileByIdAsync(fileId);
             if (file == null)
-            {
                 return BadRequest();
-            }
 
             var memory = new MemoryStream();
             using (var stream = new FileStream(file.Path, FileMode.Open))
@@ -158,13 +150,6 @@ namespace RepositoryApp.API.Controllers
             }
             memory.Position = 0;
             return File(memory, file.ContentType, file.Name);
-        }
-        private string CreateUniqueName(string fileName)
-        {
-            var rand = string.Empty;
-            var extension = fileName.Substring(fileName.LastIndexOf('.') + 1);
-            var uniqueName = $"{fileName.Substring(0, fileName.LastIndexOf('.'))}_{rand.RandomString(10)}.{extension}";
-            return uniqueName;
         }
     }
 }

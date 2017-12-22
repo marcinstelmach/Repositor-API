@@ -1,8 +1,5 @@
-﻿using System;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using RepositoryApp.Data.Model;
-using Version = RepositoryApp.Data.Model.Version;
 
 namespace RepositoryApp.Data.DAL
 {

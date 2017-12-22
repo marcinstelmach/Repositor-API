@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using RepositoryApp.Data.DAL;
@@ -27,9 +26,12 @@ namespace RepositoryApp.Service.Services.Implementations
             return file;
         }
 
-        public async Task<IList<File>> GetFilesForVersionAsync(Guid versionId)
+        public async Task<IList<File>> GetFilesAsync(Guid versionId)
         {
-            var files = await _dbContext.Files.Where(f => f.VersionId == versionId).ToListAsync();
+            var files = await _dbContext.Files
+                .Where(f => f.VersionId == versionId)
+                .OrderBy(s => s.Name)
+                .ToListAsync();
             return files;
         }
 
@@ -49,13 +51,11 @@ namespace RepositoryApp.Service.Services.Implementations
             return await _dbContext.SaveChangesAsync() >= 0;
         }
 
-        public async Task<bool> RemoveDuplicatedFile(List<File> files, string fileName)
+        public async Task<bool> RemoveDuplicatedFileAsync(List<File> files, string fileName)
         {
             var file = files.FirstOrDefault(s => s.Name == fileName);
             if (file == null)
-            {
                 return false;
-            }
 
             DeleteFile(file);
             await SaveChangesAsync();

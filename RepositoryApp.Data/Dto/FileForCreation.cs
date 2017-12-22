@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Text;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace RepositoryApp.Data.Dto
 {
@@ -9,6 +6,5 @@ namespace RepositoryApp.Data.Dto
     {
         [Required]
         public string Name { get; set; }
-        public string UniqueName { get; set; }
     }
 }

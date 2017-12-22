@@ -26,23 +26,23 @@ namespace RepositoryApp.Service.Services.Implementations
             _configuration = configuration;
         }
 
-        public async Task<User> GetUser(Guid userId)
+        public async Task<User> GetUserAsync(Guid userId)
         {
             return await _dbContext.Users.FirstOrDefaultAsync(s => s.Id == userId);
         }
 
-        public async Task<IList<User>> GetUsers()
+        public async Task<IList<User>> GetUsersAsync()
         {
             return await _dbContext.Users.ToListAsync();
         }
 
-        public async Task RemoveUser(User user)
+        public async Task RemoveUserAsync(User user)
         {
             _dbContext.Users.Remove(user);
             await Task.CompletedTask;
         }
 
-        public async Task<bool> UserExist(Guid userId)
+        public async Task<bool> UserExistAsync(Guid userId)
         {
             return await _dbContext.Users.FirstOrDefaultAsync(s => s.Id == userId) != null;
         }
@@ -76,7 +76,7 @@ namespace RepositoryApp.Service.Services.Implementations
             return resultToken;
         }
 
-        public async Task RegisterUser(User user, string password)
+        public async Task RegisterUserAsync(User user, string password)
         {
             new RNGCryptoServiceProvider().GetBytes(user.Salt = new byte[32]);
             user.PasswordHash = PasswordHasher.HashPassword(password, user.Salt);
@@ -85,7 +85,7 @@ namespace RepositoryApp.Service.Services.Implementations
             await _dbContext.Users.AddAsync(user);
         }
 
-        public async Task<User> FindUserByEmail(string email)
+        public async Task<User> FindUserByEmailAsync(string email)
         {
             var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.Email == email);
             return user;
@@ -97,7 +97,7 @@ namespace RepositoryApp.Service.Services.Implementations
             return user.PasswordHash.Equals(passwordHash);
         }
 
-        public async Task<bool> SaveAsync()
+        public async Task<bool> SaveChangesAsync()
         {
             return await _dbContext.SaveChangesAsync() >= 0;
         }

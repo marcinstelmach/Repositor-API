@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -34,7 +33,7 @@ namespace RepositoryApp.API.Controllers
         [HttpPost]
         public async Task<IActionResult> Register([FromBody] UserForCreationDto userForCreationDto)
         {
-            if (await _userService.FindUserByEmail(userForCreationDto.Email) != null)
+            if (await _userService.FindUserByEmailAsync(userForCreationDto.Email) != null)
                 ModelState.AddModelError("email", "This email is already used");
 
             if (!ModelState.IsValid)
@@ -42,8 +41,8 @@ namespace RepositoryApp.API.Controllers
 
             var user = _mapper.Map<User>(userForCreationDto);
             user.Path = $"{_configuration["Paths:Defaultpath"]}{user.UniqueName}\\";
-            await _userService.RegisterUser(user, userForCreationDto.Password);
-            if (!await _userService.SaveAsync())
+            await _userService.RegisterUserAsync(user, userForCreationDto.Password);
+            if (!await _userService.SaveChangesAsync())
                 return StatusCode(500, "A problem with saving data");
 
 
@@ -58,7 +57,7 @@ namespace RepositoryApp.API.Controllers
                 return StatusCode(500, "Can't create directory for user..." + e.Message);
             }
             var userDto = _mapper.Map<UserForDisplayDto>(user);
-            return CreatedAtRoute("GetUser", new {userId = userDto.Id}, userDto);
+            return CreatedAtRoute("GetUserAsync", new {userId = userDto.Id}, userDto);
         }
 
         [AllowAnonymous]
@@ -68,7 +67,7 @@ namespace RepositoryApp.API.Controllers
             if (!ModelState.IsValid)
                 return BadRequest();
 
-            var user = await _userService.FindUserByEmail(userForLogin.Email);
+            var user = await _userService.FindUserByEmailAsync(userForLogin.Email);
             if (user == null)
                 return BadRequest("User not Found");
 
@@ -80,13 +79,13 @@ namespace RepositoryApp.API.Controllers
         }
 
         [Authorize]
-        [HttpGet("{userId}", Name = "GetUser")]
+        [HttpGet("{userId}", Name = "GetUserAsync")]
         public async Task<IActionResult> GetUser(Guid userId)
         {
             var currentUserId = Guid.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             if (currentUserId != userId)
                 return Unauthorized();
-            var user = await _userService.GetUser(userId);
+            var user = await _userService.GetUserAsync(userId);
             if (user == null)
                 return BadRequest("User not Found");
 
@@ -98,7 +97,7 @@ namespace RepositoryApp.API.Controllers
         [HttpGet]
         public async Task<IActionResult> GetUsers()
         {
-            var users = await _userService.GetUsers();
+            var users = await _userService.GetUsersAsync();
             var usersDto = _mapper.Map<IList<UserForDisplayDto>>(users);
             return Ok(usersDto);
         }
@@ -109,15 +108,11 @@ namespace RepositoryApp.API.Controllers
         {
             var currentUserId = Guid.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             if (currentUserId != userId)
-            {
                 return Unauthorized();
-            }
 
-            var user = await _userService.GetUser(userId);
+            var user = await _userService.GetUserAsync(userId);
             if (user == null)
-            {
                 return BadRequest();
-            }
 
             try
             {
@@ -129,11 +124,9 @@ namespace RepositoryApp.API.Controllers
             }
 
 
-            await _userService.RemoveUser(user);
-            if (! await _userService.SaveAsync())
-            {
+            await _userService.RemoveUserAsync(user);
+            if (!await _userService.SaveChangesAsync())
                 return StatusCode(500, "Fault while saving database");
-            }
 
             return NoContent();
         }

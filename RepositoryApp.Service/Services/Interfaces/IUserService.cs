@@ -7,14 +7,14 @@ namespace RepositoryApp.Service.Services.Interfaces
 {
     public interface IUserService
     {
-        Task<User> GetUser(Guid userId);
-        Task<IList<User>> GetUsers();
-        Task RemoveUser(User user);
-        Task<bool> UserExist(Guid userId);
+        Task<User> GetUserAsync(Guid userId);
+        Task<IList<User>> GetUsersAsync();
+        Task RemoveUserAsync(User user);
+        Task<bool> UserExistAsync(Guid userId);
         TokenModel GenerateTokenForUser(User user);
-        Task RegisterUser(User user, string password);
-        Task<User> FindUserByEmail(string email);
+        Task RegisterUserAsync(User user, string password);
+        Task<User> FindUserByEmailAsync(string email);
         bool AuthenticateUser(User user, string password);
-        Task<bool> SaveAsync();
+        Task<bool> SaveChangesAsync();
     }
 }

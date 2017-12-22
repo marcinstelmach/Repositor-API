@@ -34,14 +34,10 @@ namespace RepositoryApp.Service.Services.Implementations
         public async void MoveFiles(string sourcePath, string destinationPath, List<string> fileNames)
         {
             if (!DirectoryExist(destinationPath))
-            {
                 await CreateDirectory(destinationPath);
-            }
 
             foreach (var fileName in fileNames)
-            {
-                File.Copy(Path.Combine(sourcePath, fileName), Path.Combine(destinationPath, fileName), true);    
-            }
+                File.Copy(Path.Combine(sourcePath, fileName), Path.Combine(destinationPath, fileName), true);
         }
 
         public void RemoveFile(string path)
