@@ -8,6 +8,12 @@
     <DocumentationFile></DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Remove="~\**" />
+    <Content Remove="~\**" />
+    <EmbeddedResource Remove="~\**" />
+    <None Remove="~\**" />
+  </ItemGroup>
+  <ItemGroup>
     <None Remove="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Remove="Properties\PublishProfiles\marcinapp - Web Deploy.pubxml" />
     <None Remove="Properties\PublishProfiles\marcinapp-devSlot - Web Deploy.pubxml" />
