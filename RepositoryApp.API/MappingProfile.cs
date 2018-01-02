@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Text;
 using AutoMapper;
 using RepositoryApp.Data.Dto;
 using RepositoryApp.Data.Model;
 using RepositoryApp.Service.Helpers;
+using File = RepositoryApp.Data.Model.File;
 using Version = RepositoryApp.Data.Model.Version;
 
 namespace RepositoryApp.API

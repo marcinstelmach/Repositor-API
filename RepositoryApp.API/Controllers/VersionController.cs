@@ -163,6 +163,7 @@ namespace RepositoryApp.API.Controllers
             var version = _mapper.Map<Version>(versionForCreation);
             version.Path = $"{repository.Path}\\{version.UniqueName}\\";
             version.Files = _versionService.PrepareFiles(baseVersion.Files, version.Path);
+            version.CreationDateTime = DateTime.Now;
 
             repository.Versions.Add(version);
 

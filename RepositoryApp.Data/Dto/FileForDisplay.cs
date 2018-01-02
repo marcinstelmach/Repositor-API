@@ -8,6 +8,7 @@ namespace RepositoryApp.Data.Dto
         public string Name { get; set; }
         public string CreationDateTime { get; set; }
         public bool Overrided { get; set; }
+        public string ContentType { get; set; }
         public Guid VersionId { get; set; }
     }
 }

@@ -10,6 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json.Serialization;
 using RepositoryApp.Data.DAL;
+using RepositoryApp.Service.Providers;
 using RepositoryApp.Service.Services.Implementations;
 using RepositoryApp.Service.Services.Interfaces;
 using Swashbuckle.AspNetCore.Swagger;
@@ -62,6 +63,7 @@ namespace RepositoryApp.API
                     })
                 .AddJsonOptions(option =>
                     option.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver());
+
 
             services.AddAutoMapper();
             services.AddSwaggerGen(c => { c.SwaggerDoc("v1", new Info {Title = "RepositoryApp", Version = "v1"}); });
