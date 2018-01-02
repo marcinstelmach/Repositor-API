@@ -76,6 +76,7 @@ namespace RepositoryApp.API.Controllers
 
             var version = _mapper.Map<Version>(versionDto);
             version.Path = $"{repository.Path}{version.UniqueName}\\";
+            version.CreationDateTime = DateTime.Now;
             repository.Versions = new List<Version>
             {
                 version

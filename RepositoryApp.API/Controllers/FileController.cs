@@ -122,6 +122,7 @@ namespace RepositoryApp.API.Controllers
 
             fileToAdd.Path = path;
             fileToAdd.ContentType = file.ContentType;
+            fileToAdd.CreationDateTime = DateTime.Now;
 
             version.Files.Add(fileToAdd);
 

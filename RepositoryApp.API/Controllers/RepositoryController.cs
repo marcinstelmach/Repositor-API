@@ -80,6 +80,7 @@ namespace RepositoryApp.API.Controllers
 
             var repository = _mapper.Map<Repository>(creationDto);
             repository.Path = $"{user.Path}{repository.UniqueName}\\";
+            repository.CreationDateTime = DateTime.Now;
             user.Repositories = new List<Repository>
             {
                 repository

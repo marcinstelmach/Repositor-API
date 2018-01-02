@@ -27,8 +27,6 @@ namespace RepositoryApp.API
             CreateMap<UserForLoginDto, User>();
 
             CreateMap<RepositoryForCreationDto, Repository>()
-                .ForMember(dest => dest.CreationDateTime,
-                    opt => opt.UseValue(DateTime.Now))
                 .ForMember(dest => dest.UniqueName,
                     opt => opt.MapFrom(src => $"{src.Name.Replace(' ', '_')}_{random.RandomString(10)}"));
 
@@ -41,8 +39,6 @@ namespace RepositoryApp.API
                         src => src.CreationDateTime.ToString("G")));
 
             CreateMap<VersionForCreation, Version>()
-                .ForMember(dest => dest.CreationDateTime,
-                    opt => opt.UseValue(DateTime.Now))
                 .ForMember(dest => dest.UniqueName,
                     opt => opt.MapFrom(src => $"{src.Name.Replace(' ', '_')}_{random.RandomString(10)}"))
                 .ForMember(dest => dest.ProductionVersion,
@@ -56,9 +52,7 @@ namespace RepositoryApp.API
                     opt => opt.MapFrom(
                         src => src.CreationDateTime.ToString("G")));
 
-            CreateMap<FileForCreation, File>()
-                .ForMember(dest => dest.CreationDateTime,
-                    opt => opt.UseValue(DateTime.Now));
+            CreateMap<FileForCreation, File>();
 
             CreateMap<File, FileForDisplay>()
                 .ForMember(dest => dest.CreationDateTime,
