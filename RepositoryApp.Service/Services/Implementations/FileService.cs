@@ -54,8 +54,10 @@ namespace RepositoryApp.Service.Services.Implementations
         {
             var file = files.FirstOrDefault(s => s.Name == fileName);
             if (file == null)
+            {
                 return false;
-
+            }
+                
             DeleteFile(file);
             await SaveChangesAsync();
 

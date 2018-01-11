@@ -64,7 +64,7 @@ namespace RepositoryApp.Service.Services.Implementations
                     Name = file.Name,
                     ContentType = file.ContentType,
                     CreationDateTime = DateTime.Now,
-                    Path = path
+                    Path = $"{path}\\{file.Name}" 
                 })
                 .ToList();
             return preparedFiles;

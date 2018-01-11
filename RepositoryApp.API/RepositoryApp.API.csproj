@@ -17,6 +17,7 @@
     <None Remove="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Remove="Properties\PublishProfiles\marcinapp - Web Deploy.pubxml" />
     <None Remove="Properties\PublishProfiles\marcinapp-devSlot - Web Deploy.pubxml" />
+    <None Remove="Properties\PublishProfiles\marcinstelmach - Web Deploy.pubxml" />
     <None Remove="Properties\PublishProfiles\RepositoryApp - Web Deploy.pubxml" />
     <None Remove="Properties\PublishProfiles\tyhua - Web Deploy.pubxml" />
   </ItemGroup>

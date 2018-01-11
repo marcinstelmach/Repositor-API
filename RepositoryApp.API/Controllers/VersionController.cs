@@ -161,7 +161,7 @@ namespace RepositoryApp.API.Controllers
                 return BadRequest();
 
             var version = _mapper.Map<Version>(versionForCreation);
-            version.Path = $"{repository.Path}\\{version.UniqueName}\\";
+            version.Path = $"{repository.Path}\\{version.UniqueName}";
             version.Files = _versionService.PrepareFiles(baseVersion.Files, version.Path);
             version.CreationDateTime = DateTime.Now;
 

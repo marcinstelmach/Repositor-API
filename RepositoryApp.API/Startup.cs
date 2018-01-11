@@ -87,13 +87,14 @@ namespace RepositoryApp.API
                 builder.AllowAnyOrigin();
                 builder.AllowAnyHeader();
                 builder.AllowAnyMethod();
+                builder.WithOrigins("http://localhost:4200");
             });
             app.UseSwagger();
             app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1/swagger.json", "Repository App"); });
             app.UseMvc();
 
 
-            DbInitializeProvider.InitializeWithDefaults(dbContext);
+            //DbInitializeProvider.InitializeWithDefaults(dbContext);
         }
     }
 }

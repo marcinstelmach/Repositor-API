@@ -111,7 +111,8 @@ namespace RepositoryApp.API.Controllers
                 Name = file.FileName
             };
             var fileToAdd = _mapper.Map<File>(fileForCreate);
-            if (await _fileService.RemoveDuplicatedFileAsync(version.Files, file.FileName))
+            var result = await _fileService.RemoveDuplicatedFileAsync(version.Files, file.FileName);
+            if (result)
                 fileToAdd.Overrided = true;
 
             var path = Path.Combine(version.Path, file.FileName);
