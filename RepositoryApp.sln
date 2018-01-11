@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27004.2002
+VisualStudioVersion = 15.0.27130.2010
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepositoryApp.API", "RepositoryApp.API\RepositoryApp.API.csproj", "{CBF4453D-C2BF-4E89-9658-3D970D6168D7}"
 EndProject
@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepositoryApp.Data", "Repos
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepositoryApp.Service", "RepositoryApp.Service\RepositoryApp.Service.csproj", "{4ADF80AD-423D-4095-9F22-A9B20EB0A9C4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepositoryApp.Test", "RepositoryApp.Test\RepositoryApp.Test.csproj", "{64F84815-1F81-411C-B1A1-44D4EAB10E5D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepositoryApp.Test", "RepositoryApp.Test\RepositoryApp.Test.csproj", "{64F84815-1F81-411C-B1A1-44D4EAB10E5D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
