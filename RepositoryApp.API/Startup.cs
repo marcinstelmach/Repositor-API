@@ -66,7 +66,7 @@ namespace RepositoryApp.API
 
 
             services.AddAutoMapper();
-            services.AddSwaggerGen(c => { c.SwaggerDoc("v1", new Info {Title = "RepositoryApp", Version = "v1"}); });
+            services.AddSwaggerGen(c => { c.SwaggerDoc("v1", new Info { Title = "RepositoryApp", Version = "v1" }); });
             services.AddSingleton(Configuration);
             services.AddTransient<IRepositoryService, RepositoryService>();
             services.AddTransient<IUserService, UserService>();
@@ -94,7 +94,7 @@ namespace RepositoryApp.API
             app.UseMvc();
 
 
-            //DbInitializeProvider.InitializeWithDefaults(dbContext);
+            DbInitializeProvider.InitializeWithDefaults(dbContext);
         }
     }
 }
